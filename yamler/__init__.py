@@ -15,9 +15,11 @@ from yamler.views import user
 from yamler.views import company
 from yamler.views import group
 from yamler.views import task
+from yamler.views import mobile 
 
 app.register_blueprint(home.mod)
 app.register_blueprint(user.mod)
 app.register_blueprint(company.mod)
 app.register_blueprint(group.mod)
 app.register_blueprint(task.mod)
+app.register_blueprint(mobile.mod)

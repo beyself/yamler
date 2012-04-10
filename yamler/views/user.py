@@ -3,9 +3,14 @@
 from flask import Blueprint,request,render_template,session,flash,redirect,url_for,jsonify
 from yamler.models.users import User,RegistrationForm,LoginForm
 from yamler.database import db_session
-from yamler.utils import request_wants_json
+from yamler.utils import request_wants_json, required_login
 
 mod = Blueprint('user',__name__,url_prefix='/user')
+
+@mod.route('/')
+def index():
+    print request.form
+    return 'ok'
 
 @mod.route('/login',methods=['GET','POST'])
 def login():
