@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+{% from "_formhelper.html" import render_field %}
+<form method=post action="{{ url_for('company.create') }}">
+<dl>
+    {{ render_field(form.name) }}
+    {{ render_field(form.scale) }}
+    {{ render_field(form.contact_name) }}
+    {{ render_field(form.address) }}
+    {{ render_field(form.telephone) }}
+    {{ render_field(form.address) }}
+    {{ render_field(form.postcode) }}
+    {{ render_field(form.website) }}
+</dl>
+  <p><input type=submit value="保存">
+</form>
+{% endblock %}
