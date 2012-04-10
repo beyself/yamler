@@ -3,9 +3,10 @@
 from sqlalchemy import Column,Integer,String,DateTime
 from yamler.database import Model
 import datetime
-from wtforms import Form, TextField
+from wtforms import Form, TextField, validators
 
 class Group(Model): 
+    __tablename__ = 'groups'
     id = Column(Integer,primary_key=True)
     company_id = Column(Integer)
     title = Column(String(45)) 
