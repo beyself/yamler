@@ -23,3 +23,19 @@ app.register_blueprint(company.mod)
 app.register_blueprint(group.mod)
 app.register_blueprint(task.mod)
 app.register_blueprint(mobile.mod)
+
+
+@app.errorhandler(404)
+def not_found(error):
+    return render_template('404.html'), 404
+
+
+@app.before_request
+def load_current_user():
+    pass
+    #g.user = User.query.filter_by(openid=session['openid']).first() \
+        #if 'openid' in session else None
+
+@app.teardown_request
+def remove_db_session(exception):
+    db_session.remove()
