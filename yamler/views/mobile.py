@@ -3,7 +3,6 @@ from flask import Blueprint, request, session, jsonify
 from yamler.database import db_session
 from yamler.models.users import User
 from yamler.models.tasks import Task
-from yamler.utils import to_json
 from sqlalchemy.sql import between
 
 mod = Blueprint('mobile',__name__,url_prefix='/mobile')
