@@ -9,7 +9,7 @@ class Task(Model):
     id = Column(Integer, primary_key=True)
     title = Column(String(150))
     user_id = Column(Integer, ForeignKey('users.id'))
-    status = Column(Integer)
+    status = Column(Integer, default = 0)
     note = Column(String(200),default='')
     priority = Column(Integer, default=1)
     end_time = Column(DateTime,default = '') 
