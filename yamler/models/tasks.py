@@ -1,5 +1,5 @@
 #encoding:utf8
-import datetime
+import datetime,time
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
 from yamler.database import Model 
 from werkzeug import http_date
@@ -28,4 +28,13 @@ class Task(Model):
         return '<Task %r>' % (self.title)
 
     def to_json(self):
-         return dict(title = self.title, note = self.note, user_id = self.user_id, priority = self.priority, status = self.status, end_time = http_date(self.end_time),create_time = http_date(self.created_at)) 
+        result = dict(title = self.title, note = self.note, user_id = self.user_id, priority = self.priority, status = self.status, created_at = self.created_at.strftime('%Y-%m-%d %T')) 
+        if self.end_time: 
+            result['end_time'] = self.end_time.strftime('%Y-%m-%d %T')
+        else:
+            result['end_time'] = '' 
+
+        return result
+
+
+
