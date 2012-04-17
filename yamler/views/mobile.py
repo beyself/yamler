@@ -45,7 +45,7 @@ def task_create():
                     user_id = request.form['user_id'], 
                     note = request.form['note'] if request.form.has_key('note') else '', 
                     priority = request.form['priority'] if request.form.has_key('priority') else 1, 
-                    end_time = request.form['end_time'] if request.form.has_key('end_time') else 1,
+                    end_time = request.form['end_time'] if request.form.has_key('end_time') else '',
                     ) 
         db_session.add(task)
         db_session.commit()
@@ -54,8 +54,9 @@ def task_create():
 
 @mod.route('/task/get',methods=['POST', 'GET'])
 def task_get():
-    if request.form['user_id'] and request.form['start_time'] and request.form['end_time']:
-        rows = db_session.query(Task).filter(between(Task.created_at, request.form['start_time'], request.form['end_time'])).filter_by(user_id = request.form['user_id']).all()
+    if request.form['user_id'] and request.form['status']:
+        #rows = db_session.query(Task).filter(between(Task.created_at, request.form['start_time'], request.form['end_time'])).filter_by(user_id = request.form['user_id']).all()
+        rows = db_session.query(Task).filter_by(user_id = request.form['user_id']).filter_by(status = request.form['status'])
         data = [row.to_json() for row in rows]
         return jsonify(error = 0, data = data)
     return jsonify(error = 1, data = {}) 
