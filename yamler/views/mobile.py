@@ -60,3 +60,15 @@ def task_get():
         data = [row.to_json() for row in rows]
         return jsonify(error = 0, data = data)
     return jsonify(error = 1, data = {}) 
+
+@mod.route('/task/update', methods=['POST', 'GET'])
+def task_update():
+    if request.method == 'POST' and request.form['id']:
+        task = db_session.query(Task).get(request.form['id']) 
+        if task:
+            if request.form['status']: 
+                task.status = request.form['status']
+            db_session.commit()
+            return jsonify(error=0, code='success', message='修改成功', id=task.id)
+    
+    return jsonify(error=1, code='failed', message='修改失败')
