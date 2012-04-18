@@ -63,11 +63,19 @@ def task_get():
 
 @mod.route('/task/update', methods=['POST', 'GET'])
 def task_update():
-    if request.method == 'POST' and request.form['id']:
+    if request.method == 'POST' and request.form['id'] and request.form['user_id']:
         task = db_session.query(Task).get(request.form['id']) 
-        if task:
-            if request.form['status']: 
+        if task and task.user_id == int(request.form['user_id']) :
+            if request.form.has_key('status') : 
                 task.status = request.form['status']
+            if request.form.has_key('title'):
+                task.title = request.form['title']
+            if request.form.has_key('note'):
+                task.note = request.form['note']
+            if request.form.has_key('priority'):
+                task.priority = request.form['priority']
+            if request.form.has_key('end_time'):
+                task.end_time = request.form['end_time']
             db_session.commit()
             return jsonify(error=0, code='success', message='修改成功', id=task.id)
     

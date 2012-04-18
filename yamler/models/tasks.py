@@ -28,7 +28,7 @@ class Task(Model):
         return '<Task %r>' % (self.title)
 
     def to_json(self):
-        result = dict(title = self.title, note = self.note, user_id = self.user_id, priority = self.priority, status = self.status, created_at = self.created_at.strftime('%Y-%m-%d %T')) 
+        result = dict(id = self.id, title = self.title, note = self.note, user_id = self.user_id, priority = self.priority, status = self.status, created_at = self.created_at.strftime('%Y-%m-%d %T')) 
         if self.end_time: 
             result['end_time'] = self.end_time.strftime('%Y-%m-%d %T')
         else:
