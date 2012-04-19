@@ -80,3 +80,14 @@ def task_update():
             return jsonify(error=0, code='success', message='修改成功', id=task.id)
     
     return jsonify(error=1, code='failed', message='修改失败')
+
+@mod.route('/task/delete', methods=['POST', 'GET'])
+def task_delete():
+    if request.method == 'POST' and request.form['id'] and request.form['user_id']:
+        task = db_session.query(Task).get(request.form['id']) 
+        if task and task.user_id == int(request.form['user_id']) :
+            db_session.delete(task)
+            db_session.commit()
+            return jsonify(error=0, code='success', message='删除成功', id=task.id)
+
+    return jsonify(error=1, code='failed', message='删除失败')
