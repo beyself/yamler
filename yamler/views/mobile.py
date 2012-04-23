@@ -3,6 +3,7 @@ from flask import Blueprint, request, session, jsonify
 from yamler.database import db_session
 from yamler.models.users import User
 from yamler.models.tasks import Task
+from yamler.models.user_relations import UserRelation 
 from sqlalchemy.sql import between
 
 mod = Blueprint('mobile',__name__,url_prefix='/mobile')
@@ -52,7 +53,7 @@ def task_create():
         return jsonify(error=0, code='success', message='添加成功')
     return jsonify(error=1, code='failed', message='输入数据不合法')
 
-@mod.route('/task/get',methods=['POST', 'GET'])
+@mod.route('/task/get',methods=['POST'])
 def task_get():
     if request.form['user_id'] and request.form['status']:
         #rows = db_session.query(Task).filter(between(Task.created_at, request.form['start_time'], request.form['end_time'])).filter_by(user_id = request.form['user_id']).all()
@@ -61,7 +62,7 @@ def task_get():
         return jsonify(error = 0, data = data)
     return jsonify(error = 1, data = {}) 
 
-@mod.route('/task/update', methods=['POST', 'GET'])
+@mod.route('/task/update', methods=['POST'])
 def task_update():
     if request.method == 'POST' and request.form['id'] and request.form['user_id']:
         task = db_session.query(Task).get(request.form['id']) 
@@ -81,7 +82,7 @@ def task_update():
     
     return jsonify(error=1, code='failed', message='修改失败')
 
-@mod.route('/task/delete', methods=['POST', 'GET'])
+@mod.route('/task/delete', methods=['POST'])
 def task_delete():
     if request.method == 'POST' and request.form['id'] and request.form['user_id']:
         task = db_session.query(Task).get(request.form['id']) 
@@ -91,3 +92,33 @@ def task_delete():
             return jsonify(error=0, code='success', message='删除成功', id=task.id)
 
     return jsonify(error=1, code='failed', message='删除失败')
+
+@mod.route('/rel/create', methods=['POST'])
+def rel_create():
+    if request.method == "POST" and request.form['user_id'] and request.form['username']:
+        user = db_session.query(User).filter_by(username=request.form['username']).first() 
+        if user is None:
+            return jsonify(error=1, code='empty', message='用户名不存在')
+        user_relations = db_session.query(UserRelation).filter_by(from_user_id=request.form['user_id']).filter_by(to_user_id=user.id).first()
+        if user_relations is None:
+            rel = UserRelation(from_user_id=request.form['user_id'], to_user_id=user.id, status=0)
+            db_session.add(rel)
+            db_session.commit()
+
+            return jsonify(error=0, code='success', from_user_id=rel.from_user_id, to_user_id=rel.to_user_id, status=rel.status)
+
+        return jsonify(error=0, code='success', from_user_id=request.form['user_id'], to_user_id=user_relations.to_user_id, status=user_relations.status)
+
+    return jsonify(error=1, code='failed', message='参数传递不正确')
+
+@mod.route('/rel/update', methods=['POST'])
+def rel_update():
+    if request.method == 'POST' and request.form['id'] and request.form['user_id']:
+        rel = db_session.query(UserRelation).get(request.form['id'])
+        if rel and rel.to_user_id == int(request.form['user_id']):
+            if request.form.has_key('status'):
+                rel.status = request.form['status']
+            db_session.commit()
+            return jsonify(error=0, code='success', from_user_id=rel.from_user_id, to_user_id=rel.to_user_id, status=rel.status)
+    
+    return jsonify(error=1, code='failed', message='参数传递不正确')
