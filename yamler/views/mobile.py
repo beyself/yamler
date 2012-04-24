@@ -101,14 +101,13 @@ def rel_create():
             return jsonify(error=1, code='empty', message='用户名不存在')
         user_relations = db_session.query(UserRelation).filter_by(from_user_id=request.form['user_id']).filter_by(to_user_id=user.id).first()
         if user_relations is None:
-            rel = UserRelation(from_user_id=request.form['user_id'], to_user_id=user.id, status=0)
+            from_user = db_session.query(User).get(request.form['user_id'])
+            rel = UserRelation(from_user_id=request.form['user_id'], to_user_id=user.id, status=0, from_user_name=from_user.username, to_user_name=request.form['username'])
             db_session.add(rel)
             db_session.commit()
-
             return jsonify(error=0, code='success', from_user_id=rel.from_user_id, to_user_id=rel.to_user_id, status=rel.status)
 
         return jsonify(error=0, code='success', from_user_id=request.form['user_id'], to_user_id=user_relations.to_user_id, status=user_relations.status)
-
     return jsonify(error=1, code='failed', message='参数传递不正确')
 
 @mod.route('/rel/update', methods=['POST'])
@@ -122,3 +121,14 @@ def rel_update():
             return jsonify(error=0, code='success', from_user_id=rel.from_user_id, to_user_id=rel.to_user_id, status=rel.status)
     
     return jsonify(error=1, code='failed', message='参数传递不正确')
+
+@mod.route('/rel/get', methods=['POST'])
+def rel_get():
+    if request.method == 'POST':
+        if request.form.has_key('to_user_id') and request.form.has_key('status'):
+            rows = db_session.query(UserRelation).filter_by(to_user_id=request.form['to_user_id']).filter_by(status=request.form['status']).all() 
+        elif request.form.has_key('from_user_id') and request.form.has_key('status'):
+            rows = db_session.query(UserRelation).filter_by(from_user_id=request.form['from_user_id']).filter_by(status=request.form['status']).all() 
+
+        data = [row.to_json() for row in rows]
+        return jsonify(error=0, data=data)
