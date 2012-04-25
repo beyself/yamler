@@ -59,7 +59,7 @@ def task_create():
 def task_get():
     if request.form['user_id'] and request.form['status']:
         #rows = db_session.query(Task).filter(between(Task.created_at, request.form['start_time'], request.form['end_time'])).filter_by(user_id = request.form['user_id']).all()
-        rows = db_session.query(Task).filter_by(user_id = request.form['user_id']).filter_by(status = request.form['status'])
+        rows = db_session.query(Task).filter(or_(Task.user_id==request.form['user_id'], Task.to_user_id==request.form['user_id'])).filter_by(status = request.form['status'])
         data = [row.to_json() for row in rows]
         return jsonify(error = 0, data = data)
     return jsonify(error = 1, data = {}) 
