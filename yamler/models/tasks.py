@@ -9,7 +9,7 @@ class Task(Model):
     id = Column(Integer, primary_key=True)
     title = Column(String(150))
     user_id = Column(Integer, ForeignKey('users.id'))
-    to_user_id = Column(Integer)
+    to_user_id = Column(Integer, default=0)
     status = Column(Integer, default = 0)
     note = Column(String(200),default='')
     priority = Column(Integer, default=1)
@@ -17,10 +17,11 @@ class Task(Model):
     created_at = Column(DateTime, default=datetime.datetime.now()) 
     updated_at = Column(DateTime,default=datetime.datetime.now()) 
 
-    def __init__(self, title, user_id, note=None, priority=None, end_time=None):
+    def __init__(self, title, user_id, note=None, priority=None, end_time=None, to_user_id=None):
         self.title = title
         self.note = note
         self.user_id = user_id
+        self.to_user_id = to_user_id
         self.priority = priority
         self.end_time = end_time
 

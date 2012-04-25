@@ -45,6 +45,7 @@ def task_create():
     if request.form['user_id'] and request.form['title']:
         task = Task(title = request.form['title'], 
                     user_id = request.form['user_id'], 
+                    to_user_id = request.form['to_user_id'] if request.form.has_key('to_user_id') else 0,
                     note = request.form['note'] if request.form.has_key('note') else '', 
                     priority = request.form['priority'] if request.form.has_key('priority') else 1, 
                     end_time = request.form['end_time'] if request.form.has_key('end_time') else '',
