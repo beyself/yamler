@@ -9,6 +9,7 @@ class Task(Model):
     id = Column(Integer, primary_key=True)
     title = Column(String(150))
     user_id = Column(Integer, ForeignKey('users.id'))
+    to_user_id = Column(Integer)
     status = Column(Integer, default = 0)
     note = Column(String(200),default='')
     priority = Column(Integer, default=1)
@@ -28,7 +29,7 @@ class Task(Model):
         return '<Task %r>' % (self.title)
 
     def to_json(self):
-        result = dict(id = self.id, title = self.title, note = self.note, user_id = self.user_id, priority = self.priority, status = self.status, created_at = self.created_at.strftime('%Y-%m-%d %T')) 
+        result = dict(id = self.id, title = self.title, note = self.note, user_id = self.user_id, to_user_id=self.to_user_id, priority = self.priority, status = self.status, created_at = self.created_at.strftime('%Y-%m-%d %T')) 
         if self.end_time: 
             result['end_time'] = self.end_time.strftime('%Y-%m-%d %T')
         else:

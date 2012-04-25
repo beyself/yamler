@@ -5,6 +5,7 @@ from yamler.models.users import User
 from yamler.models.tasks import Task
 from yamler.models.user_relations import UserRelation 
 from sqlalchemy.sql import between
+from sqlalchemy import or_
 
 mod = Blueprint('mobile',__name__,url_prefix='/mobile')
 
@@ -77,6 +78,8 @@ def task_update():
                 task.priority = request.form['priority']
             if request.form.has_key('end_time'):
                 task.end_time = request.form['end_time']
+            if request.form.has_key('to_user_id'):
+                task.to_user_id = request.form['to_user_id']
             db_session.commit()
             return jsonify(error=0, code='success', message='修改成功', id=task.id)
     
@@ -129,6 +132,7 @@ def rel_get():
             rows = db_session.query(UserRelation).filter_by(to_user_id=request.form['to_user_id']).filter_by(status=request.form['status']).all() 
         elif request.form.has_key('from_user_id') and request.form.has_key('status'):
             rows = db_session.query(UserRelation).filter_by(from_user_id=request.form['from_user_id']).filter_by(status=request.form['status']).all() 
-
+        elif request.form.has_key('user_id') and request.form.has_key('status'):
+            rows = db_session.query(UserRelation).filter(or_(UserRelation.from_user_id==request.form['user_id'],UserRelation.to_user_id==request.form['user_id'])).filter_by(status=request.form['status']).all()
         data = [row.to_json() for row in rows]
         return jsonify(error=0, data=data)
