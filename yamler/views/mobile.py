@@ -5,7 +5,7 @@ from yamler.models.users import User
 from yamler.models.tasks import Task
 from yamler.models.user_relations import UserRelation 
 from sqlalchemy.sql import between
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 mod = Blueprint('mobile',__name__,url_prefix='/mobile')
 
@@ -29,7 +29,11 @@ def register():
     username = request.form['username']
     password = request.form['password']
     if username and password:
-        user = User(username, password, is_active = 1)
+        user = User(username, 
+                    password, 
+                    is_active = 1,
+                    realname = request.form['realname'] if request.form['realname'] else '',
+                   )
         result = User.query.filter_by(username = user.username).first() 
         if result:
             return jsonify(error=1, code='username_exists', message='用户名已经存在')
@@ -58,10 +62,11 @@ def task_create():
 @mod.route('/task/get',methods=['POST'])
 def task_get():
     if request.form['user_id'] and request.form['status']:
-        #rows = db_session.query(Task).filter(between(Task.created_at, request.form['start_time'], request.form['end_time'])).filter_by(user_id = request.form['user_id']).all()
-        rows = db_session.query(Task).filter(or_(Task.user_id==request.form['user_id'], Task.to_user_id==request.form['user_id'])).filter_by(status = request.form['status'])
-        data = [row.to_json() for row in rows]
-        return jsonify(error = 0, data = data)
+        rows = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.user_id==request.form['user_id'], Task.status==request.form['status'])).all()
+        data = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows]
+        rows2 = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.to_user_id==request.form['user_id'], Task.status==request.form['status'])).all()
+        data_to = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows2]
+        return jsonify(error = 0, data_me=data, data_to=data_to)
     return jsonify(error = 1, data = {}) 
 
 @mod.route('/task/update', methods=['POST'])

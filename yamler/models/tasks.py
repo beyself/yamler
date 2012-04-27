@@ -32,7 +32,7 @@ class Task(Model):
     def to_json(self):
         result = dict(id = self.id, title = self.title, note = self.note, user_id = self.user_id, to_user_id=self.to_user_id, priority = self.priority, status = self.status, created_at = self.created_at.strftime('%Y-%m-%d %T')) 
         if self.end_time: 
-            result['end_time'] = self.end_time.strftime('%Y-%m-%d %T')
+            result['end_time'] = self.end_time.strftime('%m-%d %l:%M %p')
         else:
             result['end_time'] = '' 
 
