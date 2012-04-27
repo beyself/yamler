@@ -134,11 +134,18 @@ def rel_update():
 @mod.route('/rel/get', methods=['POST'])
 def rel_get():
     if request.method == 'POST':
+        if request.form.has_key('user_id') and request.form.has_key('status'):
+            #rows = db_session.query(UserRelation).filter(or_(UserRelation.from_user_id==request.form['user_id'],UserRelation.to_user_id==request.form['user_id'])).filter_by(status=request.form['status']).all()
+            rows = db_session.query(UserRelation,User).filter(User.id==UserRelation.to_user_id).filter(and_(UserRelation.from_user_id==request.form['user_id'],UserRelation.status==request.form['status'])).all()
+            data = [ dict(user.to_json().items() + user_rel.to_json().items())  for user_rel, user in rows]
+            rows2 = db_session.query(UserRelation,User).filter(User.id==UserRelation.from_user_id).filter(and_(UserRelation.to_user_id==request.form['user_id'],UserRelation.status==request.form['status'])).all()
+            data_to = [ dict(user.to_json().items() + user_rel.to_json().items())  for user_rel, user in rows2]
+            return jsonify(error=0, data=data, data_to=data_to)
+
         if request.form.has_key('to_user_id') and request.form.has_key('status'):
             rows = db_session.query(UserRelation).filter_by(to_user_id=request.form['to_user_id']).filter_by(status=request.form['status']).all() 
         elif request.form.has_key('from_user_id') and request.form.has_key('status'):
             rows = db_session.query(UserRelation).filter_by(from_user_id=request.form['from_user_id']).filter_by(status=request.form['status']).all() 
-        elif request.form.has_key('user_id') and request.form.has_key('status'):
-            rows = db_session.query(UserRelation).filter(or_(UserRelation.from_user_id==request.form['user_id'],UserRelation.to_user_id==request.form['user_id'])).filter_by(status=request.form['status']).all()
+
         data = [row.to_json() for row in rows]
         return jsonify(error=0, data=data)

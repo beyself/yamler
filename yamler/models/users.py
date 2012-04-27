@@ -29,7 +29,6 @@ class User(Model):
                       password=self.password,
                       realname=self.realname,
                       is_active=self.is_active,
-                      created_at=self.created_at,
                      )
         return result
 
