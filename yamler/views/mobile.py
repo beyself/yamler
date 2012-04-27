@@ -62,7 +62,7 @@ def task_create():
 @mod.route('/task/get',methods=['POST'])
 def task_get():
     if request.form['user_id'] and request.form['status']:
-        rows = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.user_id==request.form['user_id'], Task.status==request.form['status'])).all()
+        rows = db_session.query(Task, User).filter(User.id==Task.to_user_id).filter(and_(Task.user_id==request.form['user_id'], Task.status==request.form['status'])).all()
         data = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows]
         rows2 = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.to_user_id==request.form['user_id'], Task.status==request.form['status'])).all()
         data_to = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows2]
