@@ -66,7 +66,7 @@ def task_get():
         data = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows]
         rows2 = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.to_user_id==request.form['user_id'], Task.status==request.form['status'])).all()
         data_to = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows2]
-        return jsonify(error = 0, data_me=data, data_to=data_to)
+        return jsonify(error = 0, data=data, data_to=data_to)
     return jsonify(error = 1, data = {}) 
 
 @mod.route('/task/update', methods=['POST'])
