@@ -74,9 +74,9 @@ def task_get():
 
 @mod.route('/task/update', methods=['POST'])
 def task_update():
-    if request.method == 'POST' and request.form['id'] and request.form['user_id']:
+    if request.method == 'POST' and request.form['id']:
         task = db_session.query(Task).get(request.form['id']) 
-        if task and task.user_id == int(request.form['user_id']) :
+        if task:
             if request.form.has_key('status') : 
                 task.status = request.form['status']
             if request.form.has_key('title'):
