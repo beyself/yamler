@@ -89,6 +89,8 @@ def task_update():
                 task.end_time = request.form['end_time']
             if request.form.has_key('to_user_id'):
                 task.to_user_id = request.form['to_user_id']
+            if request.form.has_key('description'):
+                task.description = request.form['description']
             db_session.commit()
             return jsonify(error=0, code='success', message='修改成功', id=task.id)
     
