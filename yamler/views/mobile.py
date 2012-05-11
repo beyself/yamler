@@ -1,11 +1,12 @@
 # encoding:utf-8
 from flask import Blueprint, request, session, jsonify
-from yamler.database import db_session
-from yamler.models.users import User
+from yamler.database import db_session, conn
+from yamler.models.users import User, users
 from yamler.models.tasks import Task
+from yamler.models.companies import Company, companies 
 from yamler.models.user_relations import UserRelation 
 from sqlalchemy.sql import between
-from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_, select
 
 mod = Blueprint('mobile',__name__,url_prefix='/mobile')
 
@@ -31,15 +32,20 @@ def register():
     if username and password:
         user = User(username, 
                     password, 
-                    is_active = 1,
-                    realname = request.form['realname'] if request.form['realname'] else '',
+                    realname = request.form['realname'] if request.form.has_key('realname') else '',
+                    company_id = request.form['company_id'] if request.form.has_key('company_id') else 0,
                    )
         result = User.query.filter_by(username = user.username).first() 
+
         if result:
             return jsonify(error=1, code='username_exists', message='用户名已经存在')
         else:
             db_session.add(user)
             db_session.commit()
+            if request.form.has_key('company_name'):
+                row = conn.execute(select([companies.c.id], and_(companies.c.name==request.form['company_name']))).fetchone()
+                company_id = conn.execute(companies.insert(), name=request.form['company_name'], user_id=user.id).inserted_primary_key[0] if row is None else row['id']
+                conn.execute(users.update().values({users.c.company_id: company_id, users.c.is_active: 1}).where(users.c.id==user.id))
             return jsonify(error=0, code='success', message='成功注册', user_id = user.id)
 
     return jsonify(error=1, code = 'no_username_or_password', message='没有输入用户名或密码')
@@ -154,3 +160,16 @@ def rel_get():
 
         data = [row.to_json() for row in rows]
         return jsonify(error=0, data=data)
+
+@mod.route('/company/get', methods=['POST'])
+def company_get(): 
+    fields = [companies.c.id, companies.c.user_id, companies.c.name, companies.c.scale, companies.c.contact_name, companies.c.telephone, companies.c.address, companies.c.postcode, companies.c.website]
+    if request.method == 'POST':
+        if request.form.has_key('company_id'):
+            row = conn.execute(select(fields, and_(companies.c.id==request.form['company_id']))).fetchone()
+            data = dict(zip(row.keys(), row))
+            return jsonify(error=0, data=data)
+
+    rows = conn.execute(select(fields)).fetchall()
+    data = [dict(zip(row.keys(), row)) for row in rows]  
+    return jsonify(error=0, data=data)

@@ -1,7 +1,7 @@
 #encoding:utf8
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from yamler.database import Model
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table
+from yamler.database import Model, metadata
 import datetime
 from wtforms import Form, TextField, SelectField, validators
 
@@ -31,6 +31,9 @@ class Company(Model):
 
     def __repr__(self):
         return "<Company ('%s','%s','%s','%s','%s','%s','%s')>" % (self.name, self,scale, self.contact_name, self.telephone, self.address, self.postcode, self.website)
+
+companies = Table('companies', metadata, autoload=True)
+ 
 
 class CompanyForm(Form):
     SCALE_VALUES = [
