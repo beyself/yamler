@@ -173,3 +173,13 @@ def company_get():
     rows = conn.execute(select(fields)).fetchall()
     data = [dict(zip(row.keys(), row)) for row in rows]  
     return jsonify(error=0, data=data)
+
+
+@mod.route('/user/get', methods=['POST'])
+def user_get():
+    if request.method == 'POST':
+        if request.form.has_key('company_id'):
+            rows = conn.execute(select([users.c.id, users.c.company_id, users.c.username, users.c.realname, users.c.telephone, users.c.is_active], and_(users.c.company_id==request.form['company_id']))).fetchall()
+            data = [dict(zip(row.keys(), row)) for row in rows]  
+            return jsonify(error=0, data=data)
+    return jsonify(error=1)
