@@ -1,14 +1,16 @@
 #encoding:utf8
 import re
 from flask import g, url_for, flash, abort, request, redirect, Markup, session
+from functools import wraps
 
 def request_wants_json():
     best = request.accept_mimetypes.best_match(['application/json', 'text/html'])
     return best == 'application/json' and request.accept_mimetypes[best] > request.accept_mimetypes['text/html']
 
 def required_login(f):
+    @wraps(f)
     def decorated_function(*args, **kwargs):
-        if g.user is None:
+        if g.user.id is None:
             flash(u'需要登录才能访问')
             return redirect(url_for('user.login', next=request.path))
         if g.user.is_active == 0:

@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>易捷任务</title>
+<link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/Public_style.css') }}"/>
+<link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/index_style.css') }}"/>
+<link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/ui/jquery.ui.all.css') }}"/>
+<script src="{{ url_for('static', filename='js/libs/jquery-1.7.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.tmpl.min.js') }}"></script>
+<script language="javascript" type="text/javascript">
+$(function(){
+	$(".Reply_link").toggle(function(){
+		$(".Reply_text").show();
+		
+	},function(){
+		$(".Reply_text").hide();
+		
+	})
+	
+	$(".Task_list li").hover(function(){
+		$(this).addClass("hover");
+	},function(){
+		$(this).removeClass("hover");
+	}).click(function(){
+		$(this).addClass("current");
+		$(".Task_list li").not($(this)).removeClass("current");
+	});
+	/*$(document).click(function(ev){
+		ev = ev || window.event;
+		var target = ev.target || ev.srcElement;
+		if( target.id != "location" && target.id !="cityPop" && target.id !="citys-title" && target.id != "citys-0" && target.id != "citys-1" && target.id != "citys-2" && target.id != "citys-3" && target.id != "citys-4" && target.id != "citys-5" ){
+			$('#cityPop').hide();
+		}
+	});*/
+})
+
+
+</script>
+</head>
+
+<body>
+<!--头部块-->
+<div class="fixed_header">
+	<div class="header bg_div">
+        <!--
+    	<div class="logo"><a href="javascript:;"></a></div>
+        <div class="search">
+        	<input class="search_input" value="" type="text" />
+            <input class="search_icon search_button" type="submit" name="commit" value="" />
+        </div>
+        <div class="user_menus">
+        	<dl>
+            	<dt class="current">任务管理</dt>
+                <dd>
+                	<span>我的任务首页</span>
+                    <span>查看任务</span>
+                    <span>创建任务</span>
+                </dd>
+            </dl>
+            <dl>
+            	<dt>少华欢迎您</dt>
+                <dd>
+                	<span>个人中心</span>
+                    <span>修改设置</span>
+                    <span>帮助中心</span>
+                    <span>退出</span>
+                </dd>
+            </dl>
+        </div>
+        -->
+    </div>
+    <div class="clear"></div>
+</div>
+<!--头部块 end-->
+
+<!--主体区-->
+<div class="bg_div in_body">
+	<!--第一列-->
+	<div class="column_one">
+    	<div class="userList_head margin_bottom_15">
+        	<h1>souduanzu.com</h1>
+        </div>
+        <div class="leftMenus">
+        	<!--<h1>功能列表</h1>-->
+            <ul>
+                <li {% if pagename == 'myfeed' %}class="current" {% endif %}><a href="/home/myfeed">任务动态</a></li>
+                <!--<li {% if pagename == 'mytask' %}class="current" {% endif %}><a href="/home/mytask">我的任务</a></li>-->
+                <!--
+                <li>任务设置</li>
+                <li>添加人员</li>
+                -->
+            </ul>
+        </div>
+    </div>
+    <!--第一列 end-->
+    
+    <!--第二列-->
+    <div class="column_two">
+    {% block content %}
+    	
+    {% endblock %} 
+    </div>
+    <!--第二列 end-->
+    <!--第三列-->
+    <div class="column_three">
+    	<div></div>
+    </div>
+    <!--第三列 end-->
+</div>
+<!--主体区 end-->
+</body>
+</html>

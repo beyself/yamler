@@ -1,0 +1,188 @@
+{% extends "layout.html" %}
+{% block content %}
+	<div id="featured">
+		<div class="pattern-dark">
+			<div id="light-background">
+				<div id="featured-container">
+					
+					<div class="flexslider">
+						<ul class="slides">
+							
+					    	<li>
+								<div class="slider-content">
+                                    <img src="{{ url_for('static', filename='img/demo/slide1.png') }}" alt="" />
+								</div>
+					    	</li>
+							<li>
+								<div class="slider-content">
+                                    <img src="{{ url_for('static', filename='img/demo/slide2.png') }}" alt="" />
+								</div>
+					    	</li>
+							<li>
+								<div class="slider-content">
+                                    <img src="{{ url_for('static', filename='img/demo/slide3.png') }}" alt="">
+								</div>
+							</li>
+							
+							
+							<li>
+								<div class="slider-content">
+                                    <img src="{{ url_for('static', filename='img/demo/slide4.png') }}" alt="">
+								</div>
+							</li>
+							
+							<!--li>
+								<div class="slider-content">
+									<img src="img/demo/slide1.png" alt="">
+								</div>
+								<p class="flex-caption">Captions and cupcakes. Winning combination.</p>
+							</li-->
+
+					    </ul>
+					</div><!-- close .flexslider -->
+					
+					
+					<script type="text/javascript">
+					jQuery(document).ready(function($) {
+
+					    $('.flexslider').flexslider({
+							animation: "slide",              //String: Select your animation type, "fade" or "slide"
+							slideDirection: "horizontal",   //String: Select the sliding direction, "horizontal" or "vertical"
+							slideshow: true,                //Boolean: Animate slider automatically
+							slideshowSpeed: 7000,           //Integer: Set the speed of the slideshow cycling, in milliseconds
+							animationDuration: 500,         //Integer: Set the speed of animations, in milliseconds
+							directionNav: true,             //Boolean: Create navigation for previous/next navigation? (true/false)
+							controlNav: true,               //Boolean: Create navigation for paging control of each clide? Note: Leave true for manualControls usage
+							keyboardNav: true,              //Boolean: Allow slider navigating via keyboard left/right keys
+							mousewheel: false,              //Boolean: Allow slider navigating via mousewheel
+							prevText: "Previous",           //String: Set the text for the "previous" directionNav item
+							nextText: "Next",               //String: Set the text for the "next" directionNav item
+							pausePlay: false,               //Boolean: Create pause/play dynamic element
+							pauseText: 'Pause',             //String: Set the text for the "pause" pausePlay item
+							playText: 'Play',               //String: Set the text for the "play" pausePlay item
+							randomize: false,               //Boolean: Randomize slide order
+							slideToStart: 0,                //Integer: The slide that the slider should start on. Array notation (0 = first slide)
+							animationLoop: true,            //Boolean: Should the animation loop? If false, directionNav will received "disable" classes at either end
+							pauseOnAction: true,            //Boolean: Pause the slideshow when interacting with control elements, highly recommended.
+							pauseOnHover: false            //Boolean: Pause the slideshow when hovering over slider, then resume when no longer hovering
+					    });
+					});
+					</script>
+					
+
+				</div><!-- close #featured-container -->
+				
+					<div class="clearfix"></div>
+				
+			</div><!-- close #light-background -->
+		</div><!-- close .pattern-dark -->
+	</div><!-- close #featured -->
+
+    <div id="content-bg-top"></div><!-- Circle pattern on top of body content -->
+
+    	<div id="main-shadow">
+	<div id="main-shadow-right">
+		<div id="main-shadow-base">
+		<div id="main-shadow-base-right">
+			<div id="main" role="main">
+				
+				
+				<div id="main-container">
+					<div class="clearfix"></div>
+					
+					<div class="homepage-featured-box">
+						<h1>ThemeForest offers the best way to bring your business online!</h1>
+						<h4>0Pixel is a business, portfolio theme available only on ThemeForest</h4>
+					</div>
+					
+					<h2>What we do</h2>
+					<br>
+					
+					<div class="grid3column">
+                        <h3 class="underline-heading"><span class="heading-icon"><img src="{{ url_for('static', filename='img/demo/heading-icon.png') }}" alt=""></span>Get started today</h3>
+						<p>When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries. There are many variations of Lorem Ipsum available.</p>
+						<a href="about.php" class="button">Read more</a>
+					</div>
+					
+					<div class="grid3column">
+                        <h3 class="underline-heading"><span class="heading-icon"><img src="{{ url_for('static', filename='img/demo/heading-icon2.png') }}" alt=""></span>Browser compatible</h3>
+						<p>When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries. There are many variations of Lorem Ipsum available.</p>
+						<a href="about.php" class="button">Read more</a>
+					</div>
+					
+					<div class="grid3column lastcolumn">
+                        <h3 class="underline-heading"><span class="heading-icon"><img src="{{ url_for('static', filename='img/demo/heading-icon3.png') }}" alt=""></span>Responsive layout</h3>
+						<p>When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries. There are many variations of Lorem Ipsum available.</p>
+						<a href="about.php" class="button">Read more</a>
+					</div>
+					
+					<div class="clearfix"></div>
+					
+					
+					<br><br>
+					
+					
+					<h2>Our recent work</h2>
+					<div class="grid4column">
+						<p>When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+						<a href="portfolio.php" class="button">View more work</a>
+						<br><br>
+					</div>
+					
+					<div class="grid4column">
+						
+						<h5 class="portfolio-item"><a href="portfolio-single.php">Fresh Green Meadow</a></h5>
+						<div class="portfolio-item-index">														
+							
+							<div class="gallery-hover">
+                                <a href="{{ url_for('static', filename='img/demo/portfolio-image1-large.jpg') }}" rel="prettyPhoto[gallery]" class="icon-container">
+								</a>
+                                <img src="{{ url_for('static', filename='img/demo/portfolio-image1.jpg') }}" alt="">
+							</div>
+							<p>Lorem Ipsum is simply dummy text of the printing typesetting industry. </p>
+						</div><!-- close .portfolio-item-index -->
+						<div class="view-full-details"><a href="portfolio-single.php">View Full Detail</a></div>
+						
+					</div>
+					
+					<div class="grid4column">
+						
+						<h5 class="portfolio-item"><a href="portfolio-single.php">Sunrise</a></h5>
+						<div class="portfolio-item-index">														
+							
+							<div class="gallery-hover">
+                                <a href="{{ url_for('static', filename='img/demo/portfolio-image2-large.jpg') }}" rel="prettyPhoto[gallery]" class="icon-container">
+								</a>
+                                <img src="{{ url_for('static', filename='img/demo/portfolio-image2.jpg') }}" alt="">
+							</div>
+							<p>Lorem Ipsum is simply dummy text of the printing typesetting industry. </p>
+						</div><!-- close .portfolio-item-index -->
+						<div class="view-full-details"><a href="portfolio-single.php">View Full Detail</a></div>
+						
+					</div>
+					
+					<div class="grid4column lastcolumn">
+						
+						<h5 class="portfolio-item"><a href="portfolio-single.php">Scenic Mountains</a></h5>
+						<div class="portfolio-item-index">														
+							
+							<div class="gallery-hover">
+                                <a href="{{ url_for('static', filename='img/demo/portfolio-image3-large.jpg') }}" rel="prettyPhoto[gallery]" class="icon-container">
+								</a>
+                                <img src="{{ url_for('static', filename='img/demo/portfolio-image3.jpg') }}" alt="">
+							</div>
+							<p>Lorem Ipsum is simply dummy text of the printing typesetting industry. </p>
+						</div><!-- close .portfolio-item-index -->
+						<div class="view-full-details"><a href="portfolio-single.php">View Full Detail</a></div>
+						
+					</div>
+					
+					<div class="clearfix"></div>
+				</div><!-- close #main-container -->
+			</div><!-- close #main -->
+		</div><!-- close #main-shadow-base-right -->
+		</div><!-- close #main-shadow-base -->
+	</div><!-- close #main-shadow-right -->
+	</div><!-- close #main-shadow -->
+
+{% endblock %}

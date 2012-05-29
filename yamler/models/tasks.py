@@ -1,15 +1,16 @@
 #encoding:utf8
 import datetime,time
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
-from yamler.database import Model 
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Table
+from yamler.database import Model, metadata 
 from werkzeug import http_date
+from wtforms import Form, TextField, validators
 
 class Task(Model):
     __tablename__ = 'tasks'
     id = Column(Integer, primary_key=True)
     title = Column(String(150))
     user_id = Column(Integer, ForeignKey('users.id'))
-    to_user_id = Column(Integer, default=0)
+    to_user_id = Column(String(45), default=0)
     status = Column(Integer, default = 0)
     note = Column(String(200),default='')
     description = Column(String(500),default='')
@@ -39,5 +40,24 @@ class Task(Model):
 
         return result
 
+class TaskComment(Model):
+    __tablename__ = 'task_comments'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer)
+    task_id = Column(Integer)
+    content = Column(String(200))  
+    created_at = Column(DateTime, default=datetime.datetime.now()) 
+    updated_at = Column(DateTime,default=datetime.datetime.now()) 
 
+    def __init__(self, user_id, task_id, content):
+        self.user_id = user_id
+        self.task_id = task_id
+        self.content = content
+        
+
+tasks = Table('tasks', metadata, autoload=True)
+task_comments = Table('task_comments', metadata, autoload=True)
+
+class TaskForm(Form):
+    title = TextField('标题', [validators.required()])
 

@@ -1,0 +1,238 @@
+{% extends "layout2.html" %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='js/libs/taghandler/css/jquery.taghandler.css') }}" />
+<!--消息块-->
+    	<div class="my_Message margin_bottom_15">
+        	<ul>
+            	<li class="share_update">写点你将要做点什么吧</li>
+            </ul>
+            <div class="msg_block">
+                <form name="publish-form" id="publish-form" method="POST" action="/home/publish">
+            	    <span></span>
+                    <textarea name="title" id="title" tabindex="1"  cols="" rows="" class="text_input"></textarea>
+                    <!--<input type="text" name="notify_users" id="notify_users" size="50" />-->
+                    <input type="hidden" name="to_user_id" id="to_user_id"/>
+                    <input type="hidden" name="share_users" id="share_users"/>
+                    分享给
+                    <ul id="array_tag_handler"></ul>
+                    <input id="submit" type="button" class="btn_Submit" value="发 布"/>
+                    <div class="clear"></div>
+                </form>
+            </div>
+        </div><!--消息块 end-->
+        
+        <script id="msgTemplate" type="text/x-jquery-tmpl">
+            <div class="msgList_show">
+            	<div class="msgList_left">
+                    <img src="{{ url_for('static', filename='images/index_img/no_photo_small.gif') }}" />
+                </div>
+                <div class="msglist_right">
+                {% raw %}
+                {{if ismine}}
+                    <h2><a href="">${realname}</a></h2>
+                    <p>${title}</p>
+                    {{if share_users}}
+                        <p>我分享给${share_users}</p>
+                    {{/if}}
+                    <div class="Reply_link"> 
+                        <a href="javascript:;" class="reply_to" id="${id}">回复</a> 
+                        {{if status}}
+                        -完成
+                        {{else}}
+                        -未完成
+                        {{/if}}
+                        <a href="/task/update/${id}"  id="${id}" class="modify_task">修改</a>
+                        -${created_at}
+                    </div>
+                    <div id="comment_list${id}"></div>
+                    <div id="comment${id}"></div>
+                {{/if}}
+                {% endraw %}
+
+                {% raw %}
+                {{if other}}
+                    <h2><a href="">${realname}</a></h2>
+                    <p>${title}</p>
+                    <p><a href="">${realname}</a>分享给我 </p>
+                    <div class="Reply_link"> 
+                        <a href="javascript:;" class="reply_to" id="${id}">回复</a> 
+                        -${created_at}
+                    </div>
+                    <div id="comment_list${id}"></div>
+                    <div id="comment${id}"></div>
+                {{/if}}
+                {% endraw %} 
+                 
+                </div>
+                <div class="clear"></div>
+            </div>
+            <hr/>
+        </script>
+        
+        
+        <ul> 
+            <li><a href="/home/myfeed?t=1">只查看我的</a></li>
+            <li><a href="/home/myfeed?t=2">与我分享的</a></li>
+        </ul>   
+        <br/> 
+        <div id="msg_list" class="msg_list"> </div>
+    
+    <script id="comment_template_list" type="text/x-jquery-tmpl">
+        <div class="padd_7 rebody">
+            <h2>
+                <a href="">${realname}</a>
+                -<span>${created_at}</span>
+            </h2>
+            <p>${content}</p>
+        </div>
+    </script>
+
+    <script id="comment_template" type="text/x-jquery-tmpl">
+        <div class="padd_7 rebody">
+            <form name="comment_form" id="comment_form${task_id}" method="POST">
+            <textarea name="comment_content" cols="" rows="" class="text_input"></textarea>
+            <input name="reply_button" id="reply_button${task_id}" type="button" class="btn_Submit" value="回  复"/>
+            </form>
+            <div class="clear"></div>
+        </div>
+    </script>
+
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.core.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.widget.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.position.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.autocomplete.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/libs/taghandler/js/jquery.taghandler.min.js') }}"></script>
+
+	<!-- Add fancyBox main JS and CSS files -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/fancybox/jquery.fancybox.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='js/libs/fancybox/jquery.fancybox.css') }}" media="screen" />
+
+	<!-- Add Button helper (this is optional) -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='js/libs/fancybox/helpers/jquery.fancybox-buttons.css') }}" />
+    <script type="text/javascript" src="{{ url_for('static', filename='js/libs/fancybox/helpers/jquery.fancybox-buttons.js') }}"></script>
+
+    <script>
+     $(function() {
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+
+        $.getJSON('/company/get', function(res) {
+            $("#array_tag_handler").tagHandler({
+                //assignedTags: [ 'C', 'Perl', 'PHP' ],
+                //assignedTags: [],
+                availableTags: res.data,
+                autocomplete: true,
+                afterAdd: function(name){
+                    var id = '';
+                    $.each(res.data, function() {
+                        if(this.value == name) 
+                            id = this.id
+                    });
+                    if(id) {
+                        var to_user_id = $("#to_user_id").val()  
+                        to_user_id = to_user_id.split( /,\s*/ );
+                        to_user_id.push(id);
+                        $("#to_user_id").val(to_user_id.join(",")) 
+
+                        var share_users = $("#share_users").val();
+                        share_users = share_users.split( /,\s*/ );
+                        share_users.push(name);
+                        $("#share_users").val(share_users.join(","));
+                    }
+                },
+                afterDelete: function(name) {
+                    var id = '';
+                    $.each( res.data, function() {
+                        if(this.value == name) 
+                            id = this.id
+                    });
+                    if(id) {
+                        var to_user_id = $("#to_user_id").val()  
+                        to_user_id = to_user_id.split( /,\s*/ );
+                        to_user_id = $.grep(to_user_id, function(a) { return a != id; });
+                        $("#to_user_id").val(to_user_id.join(",")) 
+                        
+                        var share_users = $("#share_users").val();
+                        share_users = share_users.split( /,\s*/ );
+                        share_users = $.grep(share_users, function(a) { return a != name; });
+                        $("#share_users").val(share_users.join(","));
+                    }
+                }
+            });  
+        });
+
+        $("#submit").click(function() {
+            var title = $("#title").val();
+            if(!title) return false;
+            $.ajax({
+                type: 'POST',
+                data: $("#publish-form").serialize(),
+                url: "/home/publish",   
+                dataType: 'json',
+                success: function(data) {
+                    $( "#msgTemplate" ).tmpl( data ).prependTo( "#msg_list" );
+                    $("form").each(function(){ this.reset(); });
+                }
+            });
+            return false;
+        });
+        var params = "{{ request.url.split('?')[-1] }}"
+        //$.template( "comment_list_template", "<li>${content}</li>" );
+        $.getJSON('/home/getMyFeed?'+params, function(res){
+            $( "#msgTemplate" ).tmpl( res.data ).appendTo( "#msg_list" );
+            //修改的按钮绑定
+            $('.modify_task').fancybox({
+                type: 'iframe'
+            });
+            //回复列表和回复框
+            $(".reply_to").click(function(){
+                var id = $(this).attr('id') 
+                if(id) {
+                    $.getJSON('/comment/get/'+id,function(res) {
+                        $("#comment"+res.task_id).empty()
+                        $("#comment_list"+res.task_id).empty()
+                        $( "#comment_template" ).tmpl( [{'task_id': res.task_id}] ).appendTo( "#comment"+res.task_id );
+                        $( "#comment_template_list" ).tmpl( res.data ).appendTo( "#comment_list"+res.task_id );
+                        //回复按钮的绑定
+                        $("#reply_button"+res.task_id).click(function() {
+                            var comment_content = $("#comment_form"+res.task_id + " textarea").val()
+                            if(comment_content) {
+                                var form = $('#comment_form'+res.task_id)
+                                $.ajax({
+                                    type: 'POST',
+                                    data: form.serialize(),
+                                    url: '/comment/create/'+res.task_id,
+                                    dataType: 'json',
+                                    success: function(data) {
+                                        $( "#comment_template_list" ).tmpl( data ).appendTo( "#comment_list"+data.task_id );
+                                        form.each(function(){ this.reset(); });
+                                    }
+                                }); 
+                            }
+                        });
+                    });
+                }
+            });
+        });
+
+
+
+    });
+
+
+    /*
+    var data = [
+    { Name: "The Red Violin", ReleaseYear: "1998" },
+    { Name: "Eyes Wide Shut", ReleaseYear: "1999" },
+    { Name: "The Inheritance", ReleaseYear: "1976"},
+    ];
+    $( "#msgTemplate" ).tmpl( data ).appendTo( "#msg_list" );
+    */
+</script>
+{% endblock %}

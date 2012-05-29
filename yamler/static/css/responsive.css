@@ -1,0 +1,229 @@
+/*
+* Skeleton V1.1
+* Copyright 2011, Dave Gamache
+* www.getskeleton.com
+* Free to use under the MIT license.
+* http://www.opensource.org/licenses/mit-license.php
+* 8/17/2011
+*/
+/*  Table of Contents 
+	01. TESTING TEXT
+	02. COMMON FIXES
+	03. DEFAULT STYLES
+	04. TABLET (Portrait)
+	05. MOBILE (Portrait)
+	06. MOBILE (Landscape)
+*/
+
+
+
+/*
+=============================================== 01. TESTING TEXT ===============================================
+*/
+body:after {content: "less than 320px";font-size: 300%;font-weight: bold;position: fixed;bottom: 60px;width: 100%;text-align: center;background-color: hsla(1,60%,40%,0.7);color: #fff;
+display:none !important; /* -------------------- ADD OR REMOVE display:none !important; to display testing text -------------------- */}
+
+
+/*
+=============================================== 02. COMMON FIXES ===============================================
+*/
+html {-webkit-text-size-adjust: none;}	/* Removes webkit font resizing */ 
+#main, aside, #header-container { -moz-transition: all .3s ease-in-out; -webkit-transition: all .3s ease-in-out; -o-transition: all .3s ease-in-out; transition: all .3s ease-in-out;}
+body {max-width:100%; width:100%; overflow:hidden;}
+#main img {max-width: 98%; height: auto; }
+
+/*
+=============================================== 03. DEFAULT STYLES ===============================================
+*/
+body:after {content: "Wider than 959px";background-color: hsla(270,60%,40%,0.7);/* Notify what @media browser is using, Disable above by display:none; */ 	
+#featured {position:relative;max-height:100%; height:500px; }
+}
+
+
+/*
+=============================================== 04. TABLET (Portrait) ===============================================
+*/
+
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	body:after {content: "768 to 959px";background-color: hsla(270,60%,40%,0.7);}/* Notify what @media browser is using, Disable above by display:none; */ 	
+	body { min-width:768px;}
+	
+	#header-container {width:728px;} /* originally 960 */
+	#featured-container {width:768px;}
+	.footer-container {width:688px; } /* originally 880px */
+	#main-container {width:688px; padding:20px 20px;} /* originally 880px */
+	.flex-caption {width:648px;} /* originally 920px */ 
+	#main { width:738px; } /* originally 970px */
+	#main-shadow, #main-shadow-base, #main-shadow-right, #main-shadow-base-right {width:768px;}  /* originally 1000px */
+	#sidebar-container {width:430px;} 
+	#sidebar {margin-left:28px;}
+	#sidebar.sidebar-right {margin-right:28px; margin-left:0px;}
+	
+	h1#page-title {margin-left:40px;}
+	#featured #s {margin-right:40px;}
+	
+	.grid2column {width:332px;}
+	.grid3column {width:213px;}
+	.grid3columnbigcolumn {width:450px;}
+	.grid4column {width:154px;}
+	.grid4columnbig {width:510px;}
+	.grid5column {width:118px;}
+	.grid5columnsmall {width:260px;}
+	.grid5columnmedium {width:402px;}
+	.grid5columnbig {width:544px;}
+	.grid6column {width:94px;}
+	.grid6columnsmall {width:212px;}
+	.grid6columnmedium {width:448px;}
+	.grid6columnbig {width:566px;}
+	
+	#sidebar-container .grid2column {width:203px;}
+	#sidebar-container .grid3column {width:127px;}
+	#sidebar-container .grid3columnbigcolumn {width:278px;}
+	#sidebar-container .grid4column {width:89px;}
+	#sidebar-container .grid4columnbig {width:315px;}
+	#sidebar-container .grid5column {width:66px;}
+	#sidebar-container .grid5columnsmall {width:156px;}
+	#sidebar-container .grid5columnmedium {width:246px;}
+	#sidebar-container .grid5columnbig {width:336px;}
+	#sidebar-container .grid6column {width:51px;}
+	#sidebar-container .grid6columnsmall {width:126px;}
+	#sidebar-container .grid6columnmedium {width:276px;}
+	#sidebar-container .grid6columnbig {width:351px;}
+	
+	
+	.sf-menu a, .sf-menu a:visited {padding: 12px 12px 12px 15px;}
+	.sf-menu li.current-menu-item a, .sf-menu li a:hover, .sf-menu li.sfHover a {background:url(../img/navigation-arrow.png) 5px 15px no-repeat;}
+	.sf-menu li {margin:0px 3px;}
+	.ie7 .sf-menu li {margin-right:3px;}
+	
+	.blog-post-text {width:316px;}
+	.grid4column .icon-container {width:144px; height:87px;}
+	.grid3column .icon-container {width:203px; height:122px;}
+	.grid2column .icon-container {width:322px; height:194px;}
+	
+	
+	/* Add in drop-down menu
+	nav ul { display: none; }  
+	nav select option {font-size:12px; background:#fff; color:#888;}
+	nav select { text-transform:none; display:block; margin:15px auto 20px auto; width:300px; min-width: 150px; max-width: 100%; -webkit-appearance: none; -moz-appearance: normal; appearance: normal;
+	-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;
+	 -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	-webkit-padding-end: 20px; -webkit-padding-start: 2px; -webkit-user-select: none;-moz-user-select: none;
+	background-image: url(../img/select-arrow.png),  -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background: linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background-image: -moz-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background-position: center right; background-repeat: no-repeat;
+	font-size:13px;
+	border: 1px solid #aaaaaa;
+	color: #555555;
+	padding:7px 5px 7px 10px;}
+	
+	*/
+	
+}
+
+
+/*
+=============================================== 05. MOBILE (Portrait) ===============================================
+*/
+
+@media only screen and (max-width: 767px) {
+	body:after {content: "0 to 480px"; background-color: hsla(90,60%,40%,0.7);}/* Notify what @media browser is using, Disable above by display:none; */ 
+	body { min-width:350px;}
+	
+	#header-container {width:310px;} /* originally 960 */
+	#featured-container {width:350px;}
+	.footer-container {width:280px; } /* originally 880px */
+	#main-container {width:280px; padding:15px 15px;} /* originally 880px */
+	.flex-caption {width:270px; font-size:11px; padding:7px 10px 20px 10px; margin:0 30px;} /* originally 920px */ 
+	#main { width:320px; } /* originally 970px */
+	#main-shadow, #main-shadow-base, #main-shadow-right, #main-shadow-base-right {width:350px;}  /* originally 1000px */
+	#sidebar-container {width:100%; float:none;} 
+	#sidebar {margin:0px; width:100%; float:none;}
+	
+	.grid2column, .grid3column, .grid3columnbigcolumn, .grid4column, .grid4columnbig, .grid5column, .grid5columnsmall, .grid5columnmedium, .grid5columnbig, .grid6columnsmall, .grid6column, .grid6columnmedium, .grid6columnbig,
+	#sidebar-container .grid2column, #sidebar-container .grid3column, #sidebar-container .grid3columnbigcolumn, #sidebar-container .grid4column, #sidebar-container .grid4columnbig, #sidebar-container .grid5column, #sidebar-container .grid5columnsmall, #sidebar-container .grid5columnmedium, #sidebar-container .grid5columnbig, #sidebar-container .grid6columnsmall, #sidebar-container .grid6column, #sidebar-container .grid6columnmedium, #sidebar-container .grid6columnbig
+	 {float:none; margin-right:0px; width:100%;}
+	
+	
+	/* Removes traditional menu */ 
+	nav ul { display: none; }  
+	nav, #logo {float:none; margin:0 auto; text-align:center;}
+	nav select option {font-size:12px; background:#fff; color:#888;}
+	/* Adds in menu select */
+	nav select { text-transform:none; display:block; margin:15px auto 20px auto; width:92%; min-width: 150px; max-width: 100%; -webkit-appearance: none; -moz-appearance: normal; appearance: normal;
+	-webkit-border-radius: 2px; -moz-border-radius: 2px; border-radius: 2px;
+	 -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1); box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	-webkit-padding-end: 20px; -webkit-padding-start: 2px; -webkit-user-select: none;-moz-user-select: none;
+	background-image: url(../img/select-arrow.png),  -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background: linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background-image: -moz-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+	background-position: center right; background-repeat: no-repeat;
+	font-size:13px;
+	border: 1px solid #aaaaaa;
+	color: #555555;
+	padding:7px 5px 7px 10px;}
+	
+
+	
+	/* Centering Items like page title and footer */ 
+	h1#page-title {margin:0px auto 15px auto; padding-top:20px;  float:none; text-align:center;}
+	#featured form.searchform {float:none; margin:0px auto 0px auto; padding-bottom:0px; text-align:center;}
+	#featured #s  {margin:0px;}
+	.logo-footer {float:none; margin:0 auto; text-align:center;}
+	ul.footer-nav {margin:7px auto; float:none; text-align:center; list-style: none;}
+	ul.footer-nav li {float:none;}
+	
+	
+	/* Smaller directional nav */ 
+	.flex-direction-nav li a {width: 30px; height: 30px; margin: -40px 0 0; display: block; background: url(../img/slider/bg_direction_small.png) no-repeat 0px -30px; position: absolute; top: 50%; cursor: pointer; text-indent: -9999px;}
+	.flex-direction-nav li .next {background-position: -30px -30px; right:0px;}
+	.flex-direction-nav li .next:hover {background-position: -30px 0px;}
+	.flex-direction-nav li .prev {left:0px; }
+	.flex-direction-nav li .prev:hover {background-position:0px 0px;}
+	.flex-direction-nav li .disabled {opacity: .3; filter:alpha(opacity=30); cursor: default;}
+	.slides .slider-content {margin:0 30px;}
+	
+
+	input#textname, input#textemail {width:180px;}
+	textarea#comment {width:250px;}
+	
+	
+	.blog-post-text {width:250px; border-left:none; position:relative; bottom:8px;}
+	.blog-comments-count {border-left:none; margin:0px;}
+	
+	.grid4column .icon-container, .grid3column .icon-container, .grid2column .icon-container {width:270px; height:163px;}
+	.homepage-featured-box h1 {font-size:16px; line-height:22px;}
+	.homepage-featured-box h4 {font-size:12px;}
+	
+}
+
+
+/*
+=============================================== 06. MOBILE (Landscape) ===============================================
+*/
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	body:after { content: "480 to 767px"; background-color: hsla(150,50%,40%,0.7);}/* Notify what @media browser is using, Disable above by display:none; */ 
+	body { min-width:480px;}
+	
+	#header-container {width:440px;} /* originally 960 */
+	#featured-container {width:440px;} /* originally 960 */
+	.footer-container {width:400px; } /* originally 880px */
+	#main-container {width:400px; padding:20px 20px;} /* originally 880px */
+	#main { width:450px; } /* originally 970px */
+	.flex-caption {width:360px;} /* originally 920px */ 
+	#main-shadow, #main-shadow-base, #main-shadow-right, #main-shadow-base-right {width:480px;}  /* originally 1000px */
+	
+	input#textname, input#textemail {width:200px;}
+	textarea#comment {width:300px;}
+	
+	.blog-post-text {width:286px; bottom:0px;}
+	.blog-comments-count {border-left: 1px solid #e1e1e1; margin-left:82px; }
+	.blog-post-text { border-left:1px solid #f1f1f1;}
+	
+	.grid4column .icon-container, .grid3column .icon-container, .grid2column .icon-container {width:390px; height:235px;}
+
+}
+
+
+

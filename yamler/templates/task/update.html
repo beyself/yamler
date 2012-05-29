@@ -1,0 +1,61 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='js/libs/taghandler/css/jquery.taghandler.css') }}" />
+<link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/ui/jquery.ui.all.css') }}"/>
+<form>
+    <p> <label for="name">名称</label> <input type="text" name="title" value="{{ row['title']  }}"/> </p>
+    <p>
+        <label for="email">分享给</label>
+        <input type="text" name="to_user_id" id="to_user_id" value="{{ row['to_user_id'] }}"/>
+        <ul id="share_users"></ul>
+    </p>
+
+    <p>
+        <input type="radio" name="status" value="1" {% if row['status'] == 1 %} checked="true" {% endif %} />完成
+        <input type="radio" name="status" value="0" {% if row['status'] == 0 %} checked="true" {% endif %}/>未完成
+    </p>
+
+    <p>
+        <input type="button" name="update_button" value="保存"/>
+    </p>
+</form>
+
+    <script src="{{ url_for('static', filename='js/libs/jquery-1.7.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.core.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.widget.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.position.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ui/jquery.ui.autocomplete.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/libs/taghandler/js/jquery.taghandler.min.js') }}"></script>
+    <script>
+        $("#share_users").tagHandler({
+            assignedTags: {{ share_users_default|safe }},
+            availableTags: {{ data_users|safe }},
+            autocomplete: true,
+            afterAdd: function(name){
+                var id = '';
+                $.each({{ data_users|safe }}, function() {
+                    if(this.value == name) 
+                        id = this.id
+                });
+                if(id) {
+                    var to_user_id = $("#to_user_id").val()  
+                    to_user_id = to_user_id.split( /,\s*/ );
+                    to_user_id.push(id);
+                    $("#to_user_id").val(to_user_id.join(",")) 
+                }
+            },
+            afterDelete: function(name) {
+                var id = '';
+                $.each({{ data_users|safe }}, function() {
+                    if(this.value == name) 
+                        id = this.id
+                });
+                if(id) {
+                    var to_user_id = $("#to_user_id").val()  
+                    to_user_id = to_user_id.split( /,\s*/ );
+                    to_user_id = $.grep(to_user_id, function(a) { return a != id; });
+                    $("#to_user_id").val(to_user_id.join(",")) 
+                }
+            }
+        });  
+
+    </script>

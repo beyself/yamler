@@ -1,17 +1,37 @@
 {% extends "layout.html" %}
-{% block content %}
+
+{% block pagetitle %}
+<h1 id="page-title">第二步:公司选择</h1>
+{% endblock %}
+
+{% block breadcrumb %}
+<div id="bread-crumb">
+    <span>您的位置:</span> <a href="/">首页</a> <span class="arrow">Arrow</span> 公司选择 
+</div>
+{% endblock %}
+
+{% block container %}
+<h3></h3>
 {% from "_formhelper.html" import render_field %}
-<form method=post action="{{ url_for('company.create') }}">
-<dl>
+<form method=post action="{{ url_for('company.create') }}" class="form">
     {{ render_field(form.name) }}
     {{ render_field(form.scale) }}
     {{ render_field(form.contact_name) }}
     {{ render_field(form.address) }}
     {{ render_field(form.telephone) }}
-    {{ render_field(form.address) }}
     {{ render_field(form.postcode) }}
     {{ render_field(form.website) }}
-</dl>
-  <p><input type=submit value="保存">
+    <p> <input type="submit" value="保存" name="submit" class="button" /></p>
 </form>
+{% endblock %}
+
+{% block sidebar %}
+<h3>Our Address</h3>
+<p>When an unknown printer took a gallery of type and scrambled.</p>
+<ul class="contact-us-widget">
+    <li class="address">12th Street, New York, NY</li>
+    <li class="phone">023-456-978</li>
+    <li class="email"><a href="mailto:pixeltheme@no-reply.com">pixeltheme@no-reply.com</a></li>
+</ul>
+
 {% endblock %}

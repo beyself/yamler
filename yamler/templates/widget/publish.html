@@ -1,0 +1,59 @@
+    <form name="publish-form" id="publish-form" method="POST" action="/home/publish">
+        
+        <div class="row">
+            <textarea rows="2" cols="70" name="title" id="title">您将要做点什么</textarea>
+        </div>
+        
+        <div style="display:none;" id="extra-data">
+            <!--
+            <div class="row">
+                <label for="end_time">截止完成日期</label>
+                <input name="end_time" type="text"/> 
+            </div>
+            <div class="row">
+                <label for="end_time">托付给</label>
+                <select>
+                    <option value="1">自己</option> 
+                    <option value="2">zhangsan</option> 
+                    <option value="3">lisi</option> 
+                </select>
+            </div>
+
+            <div class="row">
+                <label for="end_time">分享到</label>
+                <select>
+                    <option value="1">请选择</option> 
+                    <option value="2">zhangsan</option> 
+                    <option value="3">lisi</option> 
+                </select>
+            </div>
+            -->
+        </div>
+
+        <div class="row">
+            <input type="hidden" name="type" value="1"/>
+            <input type="submit" value="发布" name="submit" class="button" id="submit">
+        </div>
+    </form> 
+
+    <script>
+        $("#title").click(function() {
+            var value = $(this).val(); 
+            if(value == '您将要做点什么') $(this).val('') 
+            $("#extra-data").show();
+        });  
+        
+        $("#submit").click(function() {
+            $.ajax({
+                type: 'POST',
+                data: $("#publish-form").serialize(),
+                url: "/home/publish",   
+                dataType: 'json',
+                success: function(data) {
+                
+                }
+            });
+
+            return false;
+        });
+    </script>

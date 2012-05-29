@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+{% block content %}
+{% from "_formhelper.html" import render_field %}
+<form method=post action="{{ url_for('group.create') }}">
+<dl>
+    {{ render_field(form.title) }}
+</dl>
+  <p><input type=submit value="保存">
+</form>
+{% endblock %}

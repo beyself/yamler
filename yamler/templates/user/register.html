@@ -1,13 +1,28 @@
 {% extends "layout.html" %}
-{% block content %}
+{% block pagetitle%}
+<h1 id="page-title">第一步:填写基本信息</h1>
+{% endblock %}
+
+{% block container %}
+<h3></h3>
+
 {% from "_formhelper.html" import render_field %}
-<form method=post action="{{ url_for('user.register') }}">
-<dl>
+<form method=post action="{{ url_for('user.register') }}" class="form">
     {{ render_field(form.username) }}
+    {{ render_field(form.realname) }}
     {{ render_field(form.password) }}
     {{ render_field(form.confirm) }}
-    {{ render_field(form.accept_tos) }}
-</dl>
-  <p><input type=submit value=Register>
+    <p> <input type="submit" value="同意注册协议,提交" name="submit" class="button" /></p>
+    <p> <textarea rows="10" cols="38" name="message" id="message"></textarea> </p>
 </form>
+{% endblock %}
+
+{% block sidebar %}
+<h3>Our Address</h3>
+<p>When an unknown printer took a gallery of type and scrambled.</p>
+<ul class="contact-us-widget">
+    <li class="address">12th Street, New York, NY</li>
+    <li class="phone">023-456-978</li>
+    <li class="email"><a href="mailto:pixeltheme@no-reply.com">pixeltheme@no-reply.com</a></li>
+</ul>
 {% endblock %}

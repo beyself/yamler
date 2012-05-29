@@ -1,0 +1,21 @@
+{% extends "layout2.html" %}
+{% block content %}
+<div class="msgList_show">
+    <table>
+        <tr>
+            <th></th>
+            <th>名称</th> 
+            <th>创建时间</th> 
+            <th>是否完成</th> 
+        </tr>
+        {% for row in task_rows %} 
+        <tr>
+            <td><input type="checkbox" name="select_ids"/></td>
+            <td>{{ row['title'] }}</td>
+            <td>{{ row['created_at'] }}</td>
+            <td>{% if row['status'] ==1 %} 是 {% else %} 否 {% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

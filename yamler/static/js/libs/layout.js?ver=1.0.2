@@ -1,0 +1,108 @@
+(function($){
+	var initLayout = function() {
+		$('.colorSelector').ColorPicker({
+			color: '#1674c1',
+			onShow: function (colpkr) {
+				$(colpkr).fadeIn(500);
+				return false;
+			},
+			onHide: function (colpkr) {
+				$(colpkr).fadeOut(500);
+				return false;
+			},
+			onChange: function (hsb, hex, rgb) {
+				$('.colorSelector div, header, .sf-menu li:hover, .sf-menu li.sfHover, .sf-menu li.current-menu-item').css('backgroundColor', '#' + hex);
+				$('.sf-menu li').hover(
+				        function() {
+				            $(this).css('backgroundColor', '#' + hex);
+				        },
+				        function() {
+				            $(this).css('backgroundColor', '');
+				        }
+				 );
+				$('.sf-menu li').hover(
+				        function() {
+				            $(this).css('backgroundColor', '#' + hex);
+				        },
+				        function() {
+				            $(this).css('backgroundColor', '#' + hex);
+				        }
+				 );
+				
+
+				
+				$('.sf-menu li li').hover(
+				        function() {
+				            $(this).css('backgroundColor', '#f8f8f8');
+				        },
+				        function() {
+				            $(this).css('backgroundColor', '#f8f8f8');
+				        }
+				 );
+
+				
+
+			}
+		});
+		$('.colorSelector2').ColorPicker({
+			color: '#1170bc',
+			onShow: function (colpkr) {
+				$(colpkr).fadeIn(500);
+				return false;
+			},
+			onHide: function (colpkr) {
+				$(colpkr).fadeOut(500);
+				return false;
+			},
+			onChange: function (hsb, hex, rgb) {
+				$('.blog-post h4 a, a.color-change, #bread-crumb, a.visited, h1, h2, h3, h4, h5, h6, #sidebar ul li a:hover, ul.tabs li a.active, h5.portfolio-item a:hover').css('color', '#' + hex);
+				$('.colorSelector2 div, .button').css('backgroundColor', '#' + hex);
+			}
+		});
+		$('.colorSelector3').ColorPicker({
+			color: '#fec604',
+			onShow: function (colpkr) {
+				$(colpkr).fadeIn(500);
+				return false;
+			},
+			onHide: function (colpkr) {
+				$(colpkr).fadeOut(500);
+				return false;
+			},
+			onChange: function (hsb, hex, rgb) {
+				$('.colorSelector3 div').css('backgroundColor', '#' + hex);
+				$('.homepage-featured-box h4').css('color', '#' + hex);
+				$('.button').css('border-color', '#' + hex);
+			}
+		});
+		$('.colorSelector4').ColorPicker({
+			color: '#f9f8e9',
+			onShow: function (colpkr) {
+				$(colpkr).fadeIn(500);
+				return false;
+			},
+			onHide: function (colpkr) {
+				$(colpkr).fadeOut(500);
+				return false;
+			},
+			onChange: function (hsb, hex, rgb) {
+				$('.colorSelector4 div, #featured, #featured #s').css('backgroundColor', '#' + hex);
+			}
+		});
+	};
+	
+	var showTab = function(e) {
+		var tabIndex = $('ul.navigationTabs a')
+							.removeClass('active')
+							.index(this);
+		$(this)
+			.addClass('active')
+			.blur();
+		$('div.tab')
+			.hide()
+				.eq(tabIndex)
+				.show();
+	};
+	
+	EYE.register(initLayout, 'init');
+})(jQuery)

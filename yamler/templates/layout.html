@@ -1,16 +1,219 @@
 <!doctype html>
-<html>
-  <head>
-    {% block head %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <title>{% block title %}{% endblock %} - My Webpage</title>
+<!--[if lt IE 7]> <html class="no-js ie6 oldie" dir="ltr" lang="en-US"> <![endif]-->
+<!--[if IE 7]> <html class="no-js ie7 oldie" dir="ltr" lang="en-US"> <![endif]-->
+<!--[if IE 8]> <html class="no-js ie8 oldie" dir="ltr" lang="en-US"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" dir="ltr" lang="en-US"> <!--<![endif]-->
+    <head>
+        {% block head %}
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>{% block title %}{% endblock %} - My Webpage</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"><!-- default css styling -->
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}"><!-- responsive css styling -->
+
+        <script src="{{ url_for('static', filename='js/libs/modernizr-2.0.6.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/libs/jquery-1.7.1.min.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/libs/jquery.tools.min.js') }}"></script>
+
+        <script src="{{ url_for('static', filename='js/plugins.js') }}"></script>
+        <script src="{{ url_for('static', filename='js/script.js' ) }}"></script>
+        {% endblock %}
+    </head>
+    <body>
+	<header>
+		<div class="pattern">
+			<div id="header-container">
+                <div id="logo"><a href="index.php"><img src="{{ url_for('static', filename='img/logo.png') }}" alt="0Pixel Logo"></a></div>
+				<nav>
+					<ul class="sf-menu">
+						<li class="current-menu-item">
+							<a href="index.php">Home</a>
+						</li>
+						<li>
+							<a href="about.php">About</a>
+							<ul>
+								<li><a href="styles.php">Page styles</a></li>
+								<li><a href="full-width.php">Full width example</a></li>
+								<li><a href="left-sidebar.php">Left sidebar</a></li>
+								<li><a href="right-sidebar.php">Right sidebar</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="portfolio.php">Portfolio</a>
+							<ul>
+								<li><a href="portfolio-2-column.php">Two column portfolio</a></li>
+								<li><a href="portfolio-3-column.php">Three column portfolio</a></li>
+								<li><a href="portfolio.php">Four column portfolio</a></li>
+								<li><a href="portfolio-single.php">Portfolio single</a></li>
+							</ul>
+						</li>
+						<li>
+							<a href="blog.php">Blog</a>
+						</li>
+						<li>
+							<a href="contact.php">Contact</a>
+						</li>
+					</ul>
+				</nav>
+				<div class="clearfix"></div>
+
+			</div><!-- close #header-container -->
+			<div class="header-border"></div>
+		</div><!-- close .pattern -->
+	</header>
+
+        <div id="featured">
+		<div class="pattern-dark">
+			<div id="light-background">
+				<div id="featured-container">
+					<div id="page-title-container">
+                            {% block pagetitle %} {% endblock %}
+						<div class="clearfix"></div>
+					</div><!-- close #page-title-container -->
+				</div><!-- close #featured-container -->
+				<div class="clearfix"></div>
+			</div><!-- close #light-background -->
+		</div><!-- close .pattern-dark -->
+	    </div><!-- close #featured -->
+	<div id="content-bg-top"></div><!-- Circle pattern on top of body content -->
+
+    {% block content %}
+    <div id="main-shadow">
+        <div id="main-shadow-right">
+            <div id="main-shadow-base">
+                <div id="main-shadow-base-right">
+                    <div id="main" role="main">
+                        <div id="main-container">
+                            {% block breadcrumb %} {% endblock %}
+                            <div class="clearfix"></div>
+
+                            <div id="sidebar-container">
+
+                                <div id="contact-frame">
+                                    <div id="contact-wrapper">
+                                        {% block container %} {% endblock %}
+                                    </div><!-- close #contact-wrapper -->
+                                </div>
+
+                            </div><!-- close #sidebar-container -->
+                            
+                            <div id="sidebar">
+                                {% block sidebar %} {% endblock %}
+                            </div><!-- close #sidebar -->
+
+                            <div class="clearfix"></div>
+                        </div><!-- close #main-container -->
+                    </div><!-- close #main -->
+                </div><!-- close #main-shadow-base-right -->
+            </div><!-- close #main-shadow-base -->
+        </div><!-- close #main-shadow-right -->
+    </div><!-- close #main-shadow -->
     {% endblock %}
-  </head>
-<body>
-  <div id="content">{% block content %}{% endblock %}</div>
-  <div id="footer">
-    {% block footer %}
-    &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
-    {% endblock %}
-  </div>
+
+    <div id="footer">
+        {% block footer %}
+        <footer>
+        <div id="footer-top">
+            <div class="footer-container">
+                <ul class="social-icons">
+                    <li class="twitter"><a href="https://twitter.com/" target="_blank">Twitter</a></li>
+                    <li class="facebook"><a href="https://www.facebook.com/" target="_blank">Facebook</a></li>
+                    <li class="linkedin"><a href="http://www.linkedin.com/" target="_blank">LinkedIn</a></li>
+                    <li class="email"><a href="mailto:no-reply@email.com">E-Mail</a></li>
+                    <!--li class="tumblr"><a href="http://www.tumblr.com/" target="_blank">Tumblr</a></li-->
+                    <!--li class="dribbble"><a href="http://dribbble.com" target="_blank">Dribbble</a></li-->
+                    <!--li class="youtube"><a href="http://www.youtube.com/" target="_blank">Youtube</a></li-->
+                    <!--li class="vimeo"><a href="http://vimeo.com/" target="_blank">Vimeo</a></li-->
+                    <!--li class="skype"><a href="http://skype.com/" target="_blank">Skype</a></li-->
+                </ul>
+                <a href="index.html#" class="scrollToTop">Scroll to top</a>
+                <div class="clearfix"></div>
+            </div><!-- close .footer-container -->
+        </div><!-- close #footer-top -->
+
+        <div class="footer-container">
+            <div class="grid4column">
+                <h3>Text Area</h3>
+                <p>When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries.</p>
+            </div>
+
+            <div class="grid4column">
+                <h3>Categories</h3>
+                <ul>
+                    <li><a href="index.html#">When an unknown printer took</a></li>
+                    <li><a href="index.html#">Gallery of type and scrambled it </a></li>
+                    <li><a href="index.html#">Type specimen book has survived</a></li>
+                    <li><a href="index.html#">Not only five centuries</a></li>
+                    <li><a href="index.html#">Lorem Ipsum is simply dummy text</a></li>
+                </ul>
+            </div>
+
+            <div class="grid4column">
+                <h3>Recent Posts</h3>
+                <ul>
+                    <li><a href="index.html#">When an unknown printer took</a></li>
+                    <li><a href="index.html#">Gallery of type and scrambled it </a></li>
+                    <li><a href="index.html#">Type specimen book has survived</a></li>
+                    <li><a href="index.html#">Not only five centuries</a></li>
+                    <li><a href="index.html#">Lorem Ipsum is simply dummy text</a></li>
+                </ul>
+            </div>
+
+            <div class="grid4column lastcolumn">
+                <h3>Contact Us</h3>
+                <p>When an unknown printer took a gallery of type and scrambled.</p>
+                <ul class="contact-us-widget">
+                    <li class="address">12th Street, New York, NY</li>
+                    <li class="phone">023-456-978</li>
+                    <li class="email"><a href="mailto:pixeltheme@no-reply.com">pixeltheme@no-reply.com</a></li>
+                </ul>				
+            </div>
+
+            <div class="clearfix"></div>
+
+        </div><!-- close .footer-container -->
+
+        <div id="footer-base">
+            <div id="footer-base-shadow">
+                <div class="footer-container">
+
+                    <div class="logo-footer"><a href="index.php"><img src="{{ url_for('static', filename='img/logo-footer.png') }}" alt="Footer Logo"></a></div>
+
+                    <ul class="footer-nav">
+                        <li>&copy; 2012 Pixel Theme</li>
+                        <li><a href="index.html#">Terms of services</a></li>
+                        <li><a href="index.html#">Privacy policy</a></li>
+                    </ul>
+
+                    <div class="clearfix"></div>
+                </div><!-- close .footer-container -->
+            </div><!-- close #footer-base-shadow -->
+        </div><!-- close #footer-top -->
+
+        </footer>
+
+        <!-- Color Picker Code Plus colorpicker.js within plugins.js -->
+        <script type="text/javascript" src="{{ url_for('static', filename='js/libs/colorpicker.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/libs/eye.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/libs/utils.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/libs/layout.js?ver=1.0.2') }}"></script>
+        <div id="toppanel">
+            <div id="panel">
+                <div class="largeheading">Unlimited Colors</div>
+                <div class="heading">Header Background:</div>
+                <div class="colorSelector"><div style="background-color: #1674c1"></div></div>
+                <div class="heading">Highlight Color:</div>
+                <div class="colorSelector2"><div style="background-color: #1170bc"></div></div>
+                <div class="heading">Featured Background:</div>
+                <div class="colorSelector4"><div style="background-color: #f9f8e9"></div></div>
+                <a href="index.html" class="reset">Reset colors</a><span class="reset"> | </span><a href="http://progressionstudios.com/pixel-red" class="reset" target="_blank">Red Theme</a>
+            </div><!-- close #panel -->
+            <div class="panel_button" style="display: visible;"><img src="{{ url_for('static', filename='img/expand.png') }}"  alt="expand"/></div> <!-- close #panel_button -->
+            <div class="panel_button hide_button" style="display: none;"><img src="{{ url_for('static', filename='img/collapse.png') }}" alt="collapse" /> </div> <!-- close #panel_button -->
+        </div>
+        <!-- Close Color Picker Code -->
+        {% endblock %}
+    </div>
 </body>
