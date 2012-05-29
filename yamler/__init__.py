@@ -8,7 +8,7 @@ from flask import Flask,session,g,render_template
 
 app = Flask(__name__)
 app.config.from_object('config')
-from yamler.database import db_session
+from yamler.database import db_session, conn
 
 from yamler.views import home
 from yamler.views import user
@@ -44,5 +44,5 @@ def load_current_user():
 @app.teardown_request
 def remove_db_session(exception):
     db_session.remove()
-
+    conn.close()
 
