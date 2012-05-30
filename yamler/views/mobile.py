@@ -1,6 +1,6 @@
 # encoding:utf-8
 from flask import Blueprint, request, session, jsonify
-from yamler.database import db_session, conn
+from yamler.database import db_session
 from yamler.models.users import User, users
 from yamler.models.tasks import Task
 from yamler.models.companies import Company, companies 
@@ -43,9 +43,9 @@ def register():
             db_session.add(user)
             db_session.commit()
             if request.form.has_key('company_name'):
-                row = conn.execute(select([companies.c.id], and_(companies.c.name==request.form['company_name']))).fetchone()
-                company_id = conn.execute(companies.insert(), name=request.form['company_name'], user_id=user.id).inserted_primary_key[0] if row is None else row['id']
-                conn.execute(users.update().values({users.c.company_id: company_id, users.c.is_active: 1}).where(users.c.id==user.id))
+                row = g.db.execute(select([companies.c.id], and_(companies.c.name==request.form['company_name']))).fetchone()
+                company_id = g.db.execute(companies.insert(), name=request.form['company_name'], user_id=user.id).inserted_primary_key[0] if row is None else row['id']
+                g.db.execute(users.update().values({users.c.company_id: company_id, users.c.is_active: 1}).where(users.c.id==user.id))
             return jsonify(error=0, code='success', message='成功注册', user_id = user.id, company_id=user.company_id)
 
     return jsonify(error=1, code = 'no_username_or_password', message='没有输入用户名或密码')
@@ -65,18 +65,62 @@ def task_create():
         return jsonify(error=0, code='success', message='添加成功')
     return jsonify(error=1, code='failed', message='输入数据不合法')
 
+#@mod.route('/task/get',methods=['POST'])
+#def task_get():
+#    if request.form['user_id'] and request.form['status']:
+#        rows = db_session.query(Task, User).filter(User.id==Task.to_user_id).filter(and_(Task.user_id==request.form['user_id'], Task.status==request.form['status'])).all()
+#        data = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows]
+#        rows2 = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.to_user_id==request.form['user_id'], Task.status==request.form['status'])).all()
+#        data_to = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows2]
+#        rows3 = db_session.query(Task).filter(and_(Task.user_id==request.form['user_id'], Task.to_user_id==0, Task.status==request.form['status'])).all()
+#        data_me = [ row.to_json() for row in rows3]
+#        return jsonify(error = 0, data=data, data_to=data_to, data_me=data_me)
+
+#    return jsonify(error = 1, data = {}) 
+
 @mod.route('/task/get',methods=['POST'])
 def task_get():
-    if request.form['user_id'] and request.form['status']:
-        rows = db_session.query(Task, User).filter(User.id==Task.to_user_id).filter(and_(Task.user_id==request.form['user_id'], Task.status==request.form['status'])).all()
-        data = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows]
-        rows2 = db_session.query(Task, User).filter(User.id==Task.user_id).filter(and_(Task.to_user_id==request.form['user_id'], Task.status==request.form['status'])).all()
-        data_to = [ dict(user.to_json().items() + task.to_json().items())  for task, user in rows2]
-        rows3 = db_session.query(Task).filter(and_(Task.user_id==request.form['user_id'], Task.to_user_id==0, Task.status==request.form['status'])).all()
-        data_me = [ row.to_json() for row in rows3]
-        return jsonify(error = 0, data=data, data_to=data_to, data_me=data_me)
-
-    return jsonify(error = 1, data = {}) 
+    user_id = request.form['user_id']
+    t = int(request.args.get('t',0))
+    if t == 1:
+        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id=:user_id ORDER BY created_at DESC"),user_id=user.id).fetchall();
+        print rows
+    elif t == 2:
+        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC"),to_user_id=user.id).fetchall();
+    else:
+        s = text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id = :user_id UNION ALL SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC") 
+        rows = g.db.execute(s, user_id=user.id, to_user_id=user.id).fetchall()
+    user_sql = text("SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN ( :id )")
+    data = []
+    #user_sql = "SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN :id "
+    for row in rows:
+        new_row = {}
+        new_row['id'] = row['id']
+        new_row['user_id'] = row['user_id'] 
+        new_row['created_at'] = row['created_at'].strftime('%Y-%m-%d %T') if row['created_at'] else ''
+        new_row['title'] = row['title'] 
+        new_row['status'] = row['status'] 
+        if row['to_user_id']:
+            sql = "SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN ("
+            to_ids = ''
+            for s in row['to_user_id'].split(','):
+                if s:
+                    to_ids += s.strip()+','
+            to_ids = to_ids.rstrip(',')
+            if to_ids != '0':
+                sql += to_ids
+                sql += ")" 
+                result = g.db.execute(text(sql)).first()
+                new_row['share_users'] = result['share_users'] 
+        if row['user_id'] == g.user.id:
+            new_row['realname'] = g.user.realname
+            new_row['ismine'] = True 
+        else:
+            result = g.db.execute(text("SELECT realname FROM users WHERE id=:id"),id=row['user_id']).first()
+            new_row['realname'] = result['realname'] 
+            new_row['other'] = True 
+        data.append(new_row)
+    return jsonify(data=data)
 
 @mod.route('/task/update', methods=['POST'])
 def task_update():
@@ -166,11 +210,11 @@ def company_get():
     fields = [companies.c.id, companies.c.user_id, companies.c.name, companies.c.scale, companies.c.contact_name, companies.c.telephone, companies.c.address, companies.c.postcode, companies.c.website]
     if request.method == 'POST':
         if request.form.has_key('company_id'):
-            row = conn.execute(select(fields, and_(companies.c.id==request.form['company_id']))).fetchone()
+            row = g.db.execute(select(fields, and_(companies.c.id==request.form['company_id']))).fetchone()
             data = dict(zip(row.keys(), row))
             return jsonify(error=0, data=data)
 
-    rows = conn.execute(select(fields)).fetchall()
+    rows = g.db.execute(select(fields)).fetchall()
     data = [dict(zip(row.keys(), row)) for row in rows]  
     return jsonify(error=0, data=data)
 
@@ -179,7 +223,7 @@ def company_get():
 def user_get():
     if request.method == 'POST':
         if request.form.has_key('company_id'):
-            rows = conn.execute(select([users.c.id, users.c.company_id, users.c.username, users.c.realname, users.c.telephone, users.c.is_active], and_(users.c.company_id==request.form['company_id']))).fetchall()
+            rows = g.db.execute(select([users.c.id, users.c.company_id, users.c.username, users.c.realname, users.c.telephone, users.c.is_active], and_(users.c.company_id==request.form['company_id']))).fetchall()
             data = [dict(zip(row.keys(), row)) for row in rows]  
             return jsonify(error=0, data=data)
     return jsonify(error=1)
