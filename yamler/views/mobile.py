@@ -1,12 +1,12 @@
 # encoding:utf-8
-from flask import Blueprint, request, session, jsonify
+from flask import Blueprint, request, session, jsonify, g
 from yamler.database import db_session
 from yamler.models.users import User, users
 from yamler.models.tasks import Task
 from yamler.models.companies import Company, companies 
 from yamler.models.user_relations import UserRelation 
 from sqlalchemy.sql import between
-from sqlalchemy import or_, and_, select
+from sqlalchemy import or_, and_, select, text
 
 mod = Blueprint('mobile',__name__,url_prefix='/mobile')
 
@@ -83,13 +83,13 @@ def task_get():
     user_id = request.form['user_id']
     t = int(request.args.get('t',0))
     if t == 1:
-        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id=:user_id ORDER BY created_at DESC"),user_id=user.id).fetchall();
+        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id=:user_id ORDER BY created_at DESC"),user_id=user_id).fetchall();
         print rows
     elif t == 2:
-        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC"),to_user_id=user.id).fetchall();
+        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC"),to_user_id=user_id).fetchall();
     else:
         s = text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id = :user_id UNION ALL SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC") 
-        rows = g.db.execute(s, user_id=user.id, to_user_id=user.id).fetchall()
+        rows = g.db.execute(s, user_id=user_id, to_user_id=user_id).fetchall()
     user_sql = text("SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN ( :id )")
     data = []
     #user_sql = "SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN :id "
@@ -112,13 +112,12 @@ def task_get():
                 sql += ")" 
                 result = g.db.execute(text(sql)).first()
                 new_row['share_users'] = result['share_users'] 
-        if row['user_id'] == g.user.id:
-            new_row['realname'] = g.user.realname
+        if row['user_id'] == user_id:
             new_row['ismine'] = True 
         else:
-            result = g.db.execute(text("SELECT realname FROM users WHERE id=:id"),id=row['user_id']).first()
-            new_row['realname'] = result['realname'] 
             new_row['other'] = True 
+        result = g.db.execute(text("SELECT realname FROM users WHERE id=:id"),id=row['user_id']).first()
+        new_row['realname'] = result['realname'] 
         data.append(new_row)
     return jsonify(data=data)
 
