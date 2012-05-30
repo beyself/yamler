@@ -8,7 +8,7 @@ from flask import Flask,session,g,render_template
 
 app = Flask(__name__)
 app.config.from_object('config')
-from yamler.database import db_session
+from yamler.database import db_session, engine
 
 from yamler.views import home
 from yamler.views import user
@@ -38,6 +38,7 @@ def not_found(error):
 
 @app.before_request
 def load_current_user():
+    g.db = engine.connect()
     g.user = User.query.filter_by(id=session['user_id']).first() if 'user_id' in session else None
     g.company = Company.query.filter_by(id=g.user.company_id).first() if g.user else None
 
@@ -45,4 +46,8 @@ def load_current_user():
 def remove_db_session(exception):
     db_session.remove()
 
+@app.after_request
+def close_db(response):
+    g.db.close()
+    return response
 
