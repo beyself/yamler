@@ -14,7 +14,7 @@ def index():
 
 @mod.route('/login',methods=['GET','POST'])
 def login():
-    if g.user.id:
+    if g.user:
         return redirect(url_for('home.myfeed'))
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
