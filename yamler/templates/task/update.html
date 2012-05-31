@@ -1,10 +1,10 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='js/libs/taghandler/css/jquery.taghandler.css') }}" />
 <link rel="stylesheet" media="all" type="text/css" href="{{ url_for('static', filename='css/ui/jquery.ui.all.css') }}"/>
-<form>
+<form method="POST" action="">
     <p> <label for="name">名称</label> <input type="text" name="title" value="{{ row['title']  }}"/> </p>
     <p>
         <label for="email">分享给</label>
-        <input type="text" name="to_user_id" id="to_user_id" value="{{ row['to_user_id'] }}"/>
+        <input type="hidden" name="to_user_id" id="to_user_id" value="{{ row['to_user_id'] }}"/>
         <ul id="share_users"></ul>
     </p>
 
@@ -14,7 +14,7 @@
     </p>
 
     <p>
-        <input type="button" name="update_button" value="保存"/>
+        <input type="submit" name="update_button" id="update_button" value="保存"/>
     </p>
 </form>
 

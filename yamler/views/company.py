@@ -1,7 +1,7 @@
 # encoding:utf8
 
 from flask import Blueprint,request,render_template,session,flash,redirect,url_for,jsonify, g
-from yamler.database import db_session
+from yamler.database import db_session 
 from yamler.models.companies import Company,CompanyForm 
 from yamler.models.users import users 
 from sqlalchemy.sql import select

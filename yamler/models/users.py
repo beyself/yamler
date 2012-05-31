@@ -49,4 +49,4 @@ class RegistrationForm(Form):
 
 class LoginForm(Form):
     username = TextField('帐户', validators=[validators.required()])
-    password = TextField('密码', validators=[validators.required()])
+    password = PasswordField('密码', validators=[validators.required()])

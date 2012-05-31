@@ -30,18 +30,18 @@
                 {% raw %}
                 {{if ismine}}
                     <h2><a href="">${realname}</a></h2>
-                    <p>${title}</p>
+                    <p id="title${id}">${title}</p>
                     {{if share_users}}
-                        <p>我分享给${share_users}</p>
+                        <p>我分享给<span id="share_users${id}">${share_users}</span></p>
                     {{/if}}
                     <div class="Reply_link"> 
                         <a href="javascript:;" class="reply_to" id="${id}">回复</a> 
                         {{if status}}
-                        -完成
+                        -<span id="status${id}">完成</span>
                         {{else}}
-                        -未完成
+                        -<span id="status${id}">未完成</span>
                         {{/if}}
-                        <a href="/task/update/${id}"  id="${id}" class="modify_task">修改</a>
+                        <a href="/task/update/${id}"  title="${id}" class="modify_task">修改</a>
                         -${created_at}
                     </div>
                     <div id="comment_list${id}"></div>
@@ -64,6 +64,7 @@
                 {% endraw %} 
                  
                 </div>
+
                 <div class="clear"></div>
             </div>
             <hr/>
@@ -71,11 +72,16 @@
         
         
         <ul> 
+            <li><a href="/home/myfeed">查看全部</a></li>
             <li><a href="/home/myfeed?t=1">只查看我的</a></li>
             <li><a href="/home/myfeed?t=2">与我分享的</a></li>
         </ul>   
         <br/> 
-        <div id="msg_list" class="msg_list"> </div>
+        <div id="msg_list" class="msg_list">
+        
+        </div>
+        
+        <p><a href="javascript:;" id="get_more_feed" name="{{ request.args.get('page',1) }}">点击，查看更多</a></p>
     
     <script id="comment_template_list" type="text/x-jquery-tmpl">
         <div class="padd_7 rebody">
@@ -166,7 +172,7 @@
                 }
             });  
         });
-
+       
         $("#submit").click(function() {
             var title = $("#title").val();
             if(!title) return false;
@@ -183,45 +189,70 @@
             return false;
         });
         var params = "{{ request.url.split('?')[-1] }}"
-        //$.template( "comment_list_template", "<li>${content}</li>" );
-        $.getJSON('/home/getMyFeed?'+params, function(res){
-            $( "#msgTemplate" ).tmpl( res.data ).appendTo( "#msg_list" );
-            //修改的按钮绑定
-            $('.modify_task').fancybox({
-                type: 'iframe'
-            });
-            //回复列表和回复框
-            $(".reply_to").click(function(){
-                var id = $(this).attr('id') 
-                if(id) {
-                    $.getJSON('/comment/get/'+id,function(res) {
-                        $("#comment"+res.task_id).empty()
-                        $("#comment_list"+res.task_id).empty()
-                        $( "#comment_template" ).tmpl( [{'task_id': res.task_id}] ).appendTo( "#comment"+res.task_id );
-                        $( "#comment_template_list" ).tmpl( res.data ).appendTo( "#comment_list"+res.task_id );
-                        //回复按钮的绑定
-                        $("#reply_button"+res.task_id).click(function() {
-                            var comment_content = $("#comment_form"+res.task_id + " textarea").val()
-                            if(comment_content) {
-                                var form = $('#comment_form'+res.task_id)
-                                $.ajax({
-                                    type: 'POST',
-                                    data: form.serialize(),
-                                    url: '/comment/create/'+res.task_id,
-                                    dataType: 'json',
-                                    success: function(data) {
-                                        $( "#comment_template_list" ).tmpl( data ).appendTo( "#comment_list"+data.task_id );
-                                        form.each(function(){ this.reset(); });
-                                    }
-                                }); 
-                            }
-                        });
-                    });
-                }
-            });
+        var url = '/home/getMyFeed?'+params
+        getMyFeed(url)
+        $("#get_more_feed").click(function() {
+            var page = parseInt($(this).attr('name'))+1; 
+            var url = '/home/getMyFeed?'+ params + '&page='+page;
+            getMyFeed(url)
+            $(this).attr('name', page);
         });
+        //$.template( "comment_list_template", "<li>${content}</li>" );
+        function getMyFeed(url)
+        {
+            $.getJSON(url, function(res){
+                if(!res.data.length) $("#get_more_feed").hide(); 
+                $( "#msgTemplate" ).tmpl( res.data ).appendTo( "#msg_list" );
+                //修改的按钮绑定
+                $('.modify_task').fancybox({
+                    type: 'iframe',
+                    afterClose: function() {
+                        var id = $(this).attr('title');
+                        $.getJSON('/task/get/'+id,function(res) {
+                            if(res.row.title)  
+                                $("#title"+id).html(res.row.title);
+                            if(res.row.share_users)
+                                $("#share_users"+id).html(res.row.share_users);
+                            if(res.row.status==1)
+                                $("#status"+id).text('完成');
+                            if(res.row.status==0)
+                                $("#status"+id).text('未完成');
+                        });
+                    }
+                });
 
+                //回复列表和回复框
+                $(".reply_to").click(function(){
+                    var id = $(this).attr('id') 
+                    if(id) {
+                        $.getJSON('/comment/get/'+id,function(res) {
+                            $("#comment"+res.task_id).empty()
+                            $("#comment_list"+res.task_id).empty()
+                            $( "#comment_template" ).tmpl( [{'task_id': res.task_id}] ).appendTo( "#comment"+res.task_id );
+                            $( "#comment_template_list" ).tmpl( res.data ).appendTo( "#comment_list"+res.task_id );
+                            //回复按钮的绑定
+                            $("#reply_button"+res.task_id).click(function() {
+                                var comment_content = $("#comment_form"+res.task_id + " textarea").val()
+                                if(comment_content) {
+                                    var form = $('#comment_form'+res.task_id)
+                                    $.ajax({
+                                        type: 'POST',
+                                        data: form.serialize(),
+                                        url: '/comment/create/'+res.task_id,
+                                        dataType: 'json',
+                                        success: function(data) {
+                                            $( "#comment_template_list" ).tmpl( data ).appendTo( "#comment_list"+data.task_id );
+                                            form.each(function(){ this.reset(); });
+                                        }
+                                    }); 
+                                }
+                            });
+                        });
+                    }
+                });
+            });
 
+        } 
 
     });
 

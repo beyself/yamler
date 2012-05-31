@@ -41,14 +41,17 @@ def publish():
 @mod.route('/getMyFeed')
 def getMyFeed():
     t = int(request.args.get('t',0))
+    page = int(request.args.get('page',1))
+    limit = 20
+    skip = (page-1) * limit
     if t == 1:
-        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id=:user_id ORDER BY created_at DESC"),user_id=g.user.id).fetchall();
+        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id=:user_id ORDER BY created_at DESC LIMIT :skip, :limit"),user_id=g.user.id, skip=skip, limit=limit).fetchall();
         print rows
     elif t == 2:
-        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC"),to_user_id=g.user.id).fetchall();
+        rows = g.db.execute(text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC LIMIT :skip, :limit"),to_user_id=g.user.id, skip=skip, limit=limit).fetchall();
     else:
-        s = text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id = :user_id UNION ALL SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC") 
-        rows = g.db.execute(s, user_id=g.user.id, to_user_id=g.user.id).fetchall()
+        s = text("SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE user_id = :user_id UNION ALL SELECT id,user_id,to_user_id,title,created_at,end_time,status FROM tasks WHERE to_user_id IN (:to_user_id) ORDER BY created_at DESC LIMIT :skip, :limit") 
+        rows = g.db.execute(s, user_id=g.user.id, to_user_id=g.user.id, skip=skip, limit=limit).fetchall()
     user_sql = text("SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN ( :id )")
     data = []
     #user_sql = "SELECT GROUP_CONCAT( realname ) AS share_users FROM `users` WHERE id IN :id "
