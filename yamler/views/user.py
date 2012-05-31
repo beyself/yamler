@@ -1,6 +1,6 @@
 # encoding:utf8
 
-from flask import Blueprint,request,render_template,session,flash,redirect,url_for,jsonify
+from flask import Blueprint,request,render_template,session,flash,redirect,url_for,jsonify, g
 from yamler.models.users import User,RegistrationForm,LoginForm
 from yamler.database import db_session
 from yamler.utils import request_wants_json, required_login
@@ -14,6 +14,8 @@ def index():
 
 @mod.route('/login',methods=['GET','POST'])
 def login():
+    if g.user.id:
+        return redirect(url_for('home.myfeed'))
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         user = User(form.username.data,form.password.data)
