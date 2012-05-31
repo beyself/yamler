@@ -56,6 +56,11 @@
                     <p><a href="">${realname}</a>分享给我 </p>
                     <div class="Reply_link"> 
                         <a href="javascript:;" class="reply_to" id="${id}">回复</a> 
+                        {{if status}}
+                        -<span id="status${id}">完成</span>
+                        {{else}}
+                        -<span id="status${id}">未完成</span>
+                        {{/if}}
                         -${created_at}
                     </div>
                     <div id="comment_list${id}"></div>
